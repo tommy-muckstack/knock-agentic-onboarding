@@ -292,6 +292,18 @@
   .agenda-list .num { flex:none; width:1.45em; height:1.45em; border-radius:999px; border:2px solid var(--lime); color:var(--lime); display:inline-flex; align-items:center; justify-content:center; font-size:.62em; font-weight:600; line-height:1; }
   .agenda-list .desc { color:var(--cover-fg); opacity:0; transform:translateX(8px); transition:opacity .6s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1); display:inline-block; margin-left:.3em; }
   .agenda-list.reveal .desc { opacity:1; transform:none; }
+  .cover .title-block.bio { padding-bottom:0; max-width:1400px; }
+  .cover .bio-blurb { font-size:clamp(18px, 1.9vw, 36px); font-weight:500; line-height:1.5; margin:0 0 1.4em; color:var(--cover-fg); }
+  .cover .bio-blurb .lime { font-weight:600; }
+  .bio-logos { display:flex; align-items:center; gap:clamp(12px, 1.4vw, 28px); margin:0 0 1.6em; flex-wrap:wrap; }
+  .bio-logos .tile { background:#fff; border-radius:12px; height:clamp(56px, 6vw, 112px); padding:0 clamp(14px, 1.4vw, 28px); display:flex; align-items:center; justify-content:center; }
+  .bio-logos .tile img { height:60%; width:auto; display:block; }
+  .bio-logos .tile.mark img { height:64%; }
+  .bio-logos .tile.wide img { height:100%; }
+  .bio-links { display:flex; align-items:center; gap:clamp(18px, 2.4vw, 48px); flex-wrap:wrap; font-size:clamp(15px, 1.5vw, 28px); font-weight:500; }
+  .bio-links a { color:var(--cover-fg); text-decoration:none; display:inline-flex; align-items:center; gap:.5em; }
+  .bio-links a:hover { color:var(--lime); }
+  .bio-links img { height:1.5em; width:1.5em; border-radius:999px; display:block; }
   .cover .credits { display:flex; align-items:center; justify-content:flex-end; gap:2.5vw; text-align:right; font-size:clamp(14px, 1.45vw, 28px); line-height:1.9; font-weight:500; }
   .cover .credits .badge { width:clamp(56px, 7vw, 140px); }
   .cover .credits .badge img { width:100%; height:auto; display:block; }
@@ -400,6 +412,25 @@
   </div>
 </section>
 
+<!-- 1b · WHO AM I (cover format) -->
+<section class="panel cover" data-nav="Who am I" data-group="Introduction" data-notes="Quick on me. My resume is a tale of two cities. I started out at pre-IPO startups in B2B and B2B2C, working on mobile, core, zero to one, growth. The past five or six years I've been at public companies, Dropbox and Amplitude. At Dropbox I ended up running the whole Growth team, over 100 people across 10 product teams. At Amplitude I'm Head of Growth, which is where agents showed up as new users. Outside the day job I build: 24Mason for the trades, HuddleUp for youth sports, a few iOS games. I teach and speak for Product School, advise a couple of startups, and write Tommy's Thoughts on Substack.">
+  <div class="title-block bio">
+    <h1 class="agenda-title">Who am I</h1>
+    <p class="bio-blurb">Tommy Keeley is <span class="lime">Head of Growth at Amplitude</span>, where his team drives AI adoption &amp; builds agentic capabilities into products like Slack &amp; Teams. Before Amplitude he spent four years driving growth at <span class="lime">Dropbox</span>, including Principal PM for Sharing &amp; Virality &amp; interim Head of Growth. Prior to Dropbox, Tommy worked at high growth startups including <span class="lime">Attentive</span> &amp; <span class="lime">AlphaSense</span>.</p>
+    <div class="bio-logos">
+      <div class="tile mark"><img src="assets/logo-amplitude-mark.png" alt="Amplitude"></div>
+      <div class="tile mark"><img src="assets/logo-dropbox.png" alt="Dropbox"></div>
+      <div class="tile wide"><img src="assets/logo-attentive.png" alt="Attentive"></div>
+      <div class="tile wide"><img src="assets/logo-alphasense.png" alt="AlphaSense"></div>
+    </div>
+    <div class="bio-links">
+      <a href="https://x.com/tktk2023tktk" target="_blank" rel="noopener"><img src="assets/icon-x.png" alt="">@tktk2023tktk</a>
+      <a href="https://substack.com/@muckstack" target="_blank" rel="noopener"><img src="assets/icon-substack.png" alt="">Tommy's Thoughts</a>
+      <a href="https://www.linkedin.com/in/thomasmkeeley/" target="_blank" rel="noopener"><img src="assets/icon-linkedin.png" alt="">thomasmkeeley</a>
+    </div>
+  </div>
+</section>
+
 <!-- 2 · AGENDA (cover format) -->
 <section class="panel cover" data-nav="Agenda" data-group="Introduction" data-notes="Same funnel you already run. Different user. Two minutes on how onboarding works today and what changes when the account is an agent, then the funnel one step at a time, then one of them live.">
   <div class="title-block agenda">
@@ -485,7 +516,6 @@
           <div class="ln dim src">reading READMEs</div>
           <div class="ln dim src">scanning marketplaces</div>
           <div class="ln dim src">scanning GitHub public repos</div>
-          <div class="ln dim src">reading Reddit threads</div>
           <div class="ln dim src">recalling LLM training data</div>
         </div>
         <div class="result" id="find-result" hidden>
@@ -523,7 +553,7 @@
   </div>
   <ul class="notes">
     <li class="">A homepage refresh does not fix this. It is a corpus problem, not a positioning problem.</li>
-    <li class="">Share of voice now has a twin: agent pick rate. The levers are docs, READMEs, community answers, and build-in-public posts. Not ad spend.</li>
+    <li class="">Share of voice now has a twin: agent pick rate. The levers are docs, READMEs, Reddit threads and community answers, and build-in-public posts. Not ad spend.</li>
   </ul>
   <div class="todo">
     <div class="label">Needs a decision</div>
@@ -713,16 +743,16 @@
   const GROUP_ICONS = { 'Introduction': 'i-book', 'The funnel': 'i-funnel', 'Measurement': 'i-thumbs-up' };   // group label → sprite id
   function icon(id) { const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('class', 'icon'); const u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#' + id); svg.appendChild(u); return svg; }
   if (navlist) {
-    let group = null;
+    let group = null, sub = null;
     slides.forEach((s, n) => {
       if (s.dataset.group !== group) {
-        group = s.dataset.group;
+        group = s.dataset.group; sub = null;
         const g = document.createElement('div'); g.className = 'nav-group';
         if (GROUP_ICONS[group]) g.appendChild(icon(GROUP_ICONS[group]));
         const t = document.createElement('span'); t.textContent = group; g.appendChild(t);
         navlist.appendChild(g);
       }
-      if (s.dataset.sub) { const sub = document.createElement('div'); sub.className = 'nav-sub'; sub.textContent = s.dataset.sub; navlist.appendChild(sub); }
+      if (s.dataset.sub && s.dataset.sub !== sub) { sub = s.dataset.sub; const sh = document.createElement('div'); sh.className = 'nav-sub'; sh.textContent = sub; navlist.appendChild(sh); }
       const b = document.createElement('button'); b.type = 'button'; b.className = 'nav-item';
       const num = document.createElement('span'); num.className = 'n'; num.textContent = String(n + 1).padStart(2, '0');
       const lbl = document.createElement('span'); lbl.textContent = s.dataset.nav;
