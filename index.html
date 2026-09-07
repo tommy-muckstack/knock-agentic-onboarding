@@ -93,10 +93,35 @@
   .content { max-width:1040px; margin:0 auto; padding:40px 40px 100px; }
 
   /* ============ Panels ============ */
+  .content { position:relative; }
   .panel { display:none; }
-  .panel.active { display:block; animation:pane var(--ease); }
+  .panel.active { display:block; }
   .panel.cover.active { display:flex; }
-  @keyframes pane { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+  /* the wipe: a skewed lime sheet sweeps across; the slide swaps behind it */
+  #wipe { position:fixed; top:-10vh; bottom:-10vh; left:-30vw; right:-30vw; z-index:15; background:var(--lime); transform:translateX(130%) skewX(-10deg); pointer-events:none; will-change:transform; }
+  #wipe::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent 0 34%, var(--cover-bg) 34% 36%, transparent 36%); opacity:.9; }
+  #wipe.in-fwd   { animation:wipeInFwd   .32s cubic-bezier(.7,0,.3,1) forwards; }
+  #wipe.out-fwd  { animation:wipeOutFwd  .36s cubic-bezier(.7,0,.3,1) forwards; }
+  #wipe.in-back  { animation:wipeInBack  .32s cubic-bezier(.7,0,.3,1) forwards; }
+  #wipe.out-back { animation:wipeOutBack .36s cubic-bezier(.7,0,.3,1) forwards; }
+  @keyframes wipeInFwd   { from { transform:translateX(130%) skewX(-10deg); }  to { transform:translateX(0) skewX(-10deg); } }
+  @keyframes wipeOutFwd  { from { transform:translateX(0) skewX(-10deg); }     to { transform:translateX(-130%) skewX(-10deg); } }
+  @keyframes wipeInBack  { from { transform:translateX(-130%) skewX(10deg); }  to { transform:translateX(0) skewX(10deg); } }
+  @keyframes wipeOutBack { from { transform:translateX(0) skewX(10deg); }      to { transform:translateX(130%) skewX(10deg); } }
+
+  /* the new slide's blocks rise in with a stagger as the wipe clears */
+  .panel.active.stagger > *:not(.frag) { animation:rise .5s cubic-bezier(.2,.7,.2,1) both; }
+  .panel.active.stagger > *:nth-child(1) { animation-delay:.05s; }
+  .panel.active.stagger > *:nth-child(2) { animation-delay:.12s; }
+  .panel.active.stagger > *:nth-child(3) { animation-delay:.19s; }
+  .panel.active.stagger > *:nth-child(4) { animation-delay:.26s; }
+  .panel.active.stagger > *:nth-child(5) { animation-delay:.33s; }
+  .panel.active.stagger > *:nth-child(n+6) { animation-delay:.4s; }
+  @keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+  .panel.cover.active.stagger > * { animation-duration:.6s; }
+  .panel.active.plain { animation:fade .26s cubic-bezier(.2,.7,.2,1); }
+  @keyframes fade { from { opacity:0; } to { opacity:1; } }
   .panel-head { border-bottom:1px solid var(--g30); padding-bottom:20px; margin-bottom:28px; }
   .eyebrow { font-size:14px; color:var(--text-secondary); margin:0 0 6px; }
   h1 { font-size:31px; font-weight:var(--fw-strong); letter-spacing:-.01em; line-height:1.25; margin:0 0 10px; max-width:620px; text-wrap:balance; }
@@ -126,6 +151,22 @@
   .app-card ul.notes { padding-left:20px; }
   .app-card .path { font-size:13.5px; color:var(--text-secondary); margin-top:10px; }
 
+  .gf { display:grid; grid-template-columns:1.1fr 1.5fr 1fr 1fr; gap:12px; margin:16px 0 0; align-items:stretch; }
+  .gf-stage { position:relative; background:var(--white); border:1px solid var(--g30); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:6px; }
+  .gf-stage .k { width:26px; height:26px; border-radius:999px; border:2px solid var(--blue); color:var(--blue); font-size:12.5px; font-weight:var(--fw-strong); display:inline-flex; align-items:center; justify-content:center; margin-bottom:4px; }
+  .gf-stage h4 { margin:0; }
+  .gf-stage > p { margin:0; font-size:14px; line-height:1.5; }
+  .gf-sub { margin-top:auto; padding-top:12px; border-top:1px solid var(--g30); }
+  .gf-label { font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--text-secondary); margin-bottom:8px; }
+  .gf-sub .tnote { font-size:12.5px; margin-top:8px; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .gf-children { display:grid; gap:8px; }
+  .gf-child { background:var(--g10); border:1px solid var(--g30); border-radius:8px; padding:10px 12px; font-size:13.5px; line-height:1.45; display:grid; gap:2px; }
+  .gf-child b { color:var(--blue); }
+  .gf-child span { color:var(--text-primary); }
+  .gf-stage:not(:last-child)::after { content:""; position:absolute; right:-9px; top:50%; width:6px; height:6px; border-top:2px solid var(--g50); border-right:2px solid var(--g50); transform:translateY(-50%) rotate(45deg); }
+  @media (max-width:900px) { .gf { grid-template-columns:1fr 1fr; } .gf-stage::after { display:none !important; } }
+  @media (max-width:520px) { .gf { grid-template-columns:1fr; } }
   .table-scroll { border:1px solid var(--g30); border-radius:12px; max-height:420px; overflow:auto; margin:12px 0 0; }
   table.dtable { width:100%; border-collapse:collapse; font-size:15px; }
   .dtable th { text-align:left; padding:10px 14px; background:var(--g10); border-bottom:1px solid var(--g30); font-weight:var(--fw-strong); font-size:13px; position:sticky; top:0; white-space:nowrap; }
@@ -220,8 +261,8 @@
   #help .row { display:flex; align-items:center; margin:6px 0; font-size:14px; }
 
   @media (prefers-reduced-motion:reduce) {
-    .panel { animation:none !important; }
-    .panel.leaving { display:none !important; }
+    .panel, .panel.active.stagger > * { animation:none !important; }
+    #wipe { display:none; }
     .frag, .app-card, .step, .nav-item, .btn, .btn-sm, #arrows, .arrow, .agenda-list .desc, nav, #nav-tab { transition:none; }
     .cursor::after { animation:none; }
   }
@@ -271,8 +312,8 @@
 </svg>
 <div class="shell">
   <div id="nav-hot" aria-hidden="true"></div>
-  <button id="nav-tab" type="button" aria-label="Open sections" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
-  <nav aria-label="Sections">
+  <button id="nav-tab" type="button" aria-label="Open slides" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
+  <nav aria-label="Slides">
     <div class="nav-head">Your new user is an agent</div>
     <div id="navlist"></div>
   </nav>
@@ -309,27 +350,52 @@
   </div>
 </section>
 
-<!-- 3 · TWO JOURNEYS -->
-<section class="panel" id="journeys" data-nav="Onboarding flow" data-group="Introduction" data-notes="Every onboarding flow you've ever built optimizes the left column. Trust, motivation, a nice empty state, a checklist that makes a person feel progress. The agent doesn't feel anything. It needs the right column. These are different design problems, and most of us are still only solving the first one. The useful part: designing for the agent bar usually improves the human flow too, because you were guessing about the human's needs and you cannot guess about the agent's.">
+<!-- 3 · ONBOARDING 101: the growth funnel for a human -->
+<section class="panel" id="journeys" data-nav="Onboarding 101" data-group="Introduction" data-notes="Before the turn, the growth funnel you already run, with a person on the other side. Acquisition: where they come from. Paid gives you speed and stops when you stop spending. Organic compounds slowly. Referral and word of mouth are the ones you under-attribute. Activation is not one moment, it is a chain: setup, aha, habit. Setup is configuration, and without it a user literally cannot get value. Aha is the first time they get value their other tools could not give them. Habit is when they come back on a cadence, and it is the best predictor of retention. Then engagement, then monetization: gate, meter, bill. Every one of these steps is built to move a person. Hold onto that, because the next slide takes the person out.">
   <div class="panel-head">
-    <p class="eyebrow">Onboarding flow</p>
-    <h1>Same product. Different user.</h1>
-    <p>Every onboarding flow you've built optimizes the left card. <b>The agent needs the right card, and almost nobody is designing for it yet.</b></p>
+    <p class="eyebrow">Onboarding 101</p>
+    <h1>The growth funnel, end to end, for a human</h1>
+    <p>Four stages. Every one of them built to move a person: <b>confidence, comprehension, motivation, permission.</b></p>
   </div>
-  <div class="app-grid">
-    <div class="app-card" id="card-human">
-      <h4>A human needs</h4>
-      <ul class="notes"><li>confidence</li><li>comprehension</li><li>motivation</li><li>permission</li></ul>
-      <div class="path">discover → evaluate → authorize → trust → adopt</div>
+  <div class="gf">
+    <div class="gf-stage frag">
+      <div class="k">1</div><h4>Acquisition</h4>
+      <p>Where they come from. Not all channels are equal: some bring intent, some bring volume.</p>
+      <div class="gf-sub">
+        <div class="gf-label">Sources</div>
+        <div class="chips">
+          <span class="chip info">SEO</span><span class="chip info">SEM</span><span class="chip info">Paid social</span><span class="chip info">Content</span><span class="chip info">Word of mouth</span><span class="chip info">Referral</span><span class="chip info">Partnerships</span><span class="chip info">Community</span><span class="chip info">Direct</span>
+        </div>
+        <p class="tnote">Paid buys speed and stops when you stop spending. Organic compounds. Referral is the one you under-attribute.</p>
+      </div>
     </div>
-    <div class="app-card" id="card-agent">
-      <h4>An agent needs</h4>
-      <ul class="notes"><li>discoverability</li><li>explicit instructions</li><li>deterministic tools</li><li>credentials</li><li>machine-readable errors</li><li>verification</li></ul>
-      <div class="path">resolve instructions → authenticate → execute → verify → report</div>
+    <div class="gf-stage wide frag">
+      <div class="k">2</div><h4>Activation</h4>
+      <p>Not a moment. A chain, and the chain predicts retention.</p>
+      <div class="gf-sub">
+        <div class="gf-label">Setup → Aha → Habit</div>
+        <div class="gf-children">
+          <div class="gf-child frag"><b>Setup</b><span>Configuration: import data, connect accounts, create a workspace. Without it a user cannot get value.</span></div>
+          <div class="gf-child frag"><b>Aha</b><span>The first time they get value their other tools couldn't give them. Often a basket of actions, not one event.</span></div>
+          <div class="gf-child frag"><b>Habit</b><span>They come back on a cadence after setup and aha. The best indicator of retention.</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="gf-stage frag">
+      <div class="k">3</div><h4>Engagement</h4>
+      <p>Breadth and depth of use once the habit exists. More seats, more workflows, more of the product.</p>
+      <div class="gf-sub"><div class="gf-label">You watch</div><p class="tnote">Active use, feature adoption, expansion inside the account.</p></div>
+    </div>
+    <div class="gf-stage frag">
+      <div class="k">4</div><h4>Monetization</h4>
+      <p>Where the value exchange becomes money.</p>
+      <div class="gf-sub"><div class="gf-label">Gate → Meter → Bill</div><p class="tnote">Where the paywall sits, what you count, and when you charge. Map it onto setup, aha, habit.</p></div>
     </div>
   </div>
-  <span class="frag" data-on="journeysAgent" data-off="journeysReset" hidden></span>
-  <p class="tnote">Press → to step past the human list. Designing for the agent bar usually improves the human flow too: you were guessing about the human, and you cannot guess about the agent.</p>
+  <div class="callout frag">
+    <div class="label">Hold onto this</div>
+    Every stage assumes a person on the other side who can be persuaded, reassured, and nudged. The next slide takes the person out.
+  </div>
 </section>
 
 <!-- 4 · FIND -->
@@ -486,27 +552,28 @@
     <h1>Find me at the bar</h1>
     <p>Tommy Keeley · <a href="https://muckstack.com">muckstack.com</a></p>
   </div>
-  <p class="tnote">Press ? for the key map. Sections are deep-linkable by number in the URL.</p>
+  <p class="tnote">Press ? for the key map. Slides are deep-linkable by number in the URL.</p>
 </section>
 
     </div>
   </main>
 </div>
 
-<div id="arrows" aria-label="Section navigation">
+<div id="wipe" aria-hidden="true"></div>
+<div id="arrows" aria-label="Slide navigation">
   <button class="arrow" id="arrow-prev" type="button" aria-label="Previous"><svg class="icon"><use href="#i-arrow-left-circle"/></svg></button>
   <button class="arrow" id="arrow-next" type="button" aria-label="Next"><svg class="icon"><use href="#i-arrow-right-circle"/></svg></button>
 </div>
 <div id="notes" hidden><div class="label">Speaker notes</div><div id="notes-text"></div></div>
 <div id="help" hidden>
   <div class="card">
-    <div class="row"><kbd>→</kbd><kbd>space</kbd> next fragment or section</div>
+    <div class="row"><kbd>→</kbd><kbd>space</kbd> next fragment or slide</div>
     <div class="row"><kbd>←</kbd> back</div>
-    <div class="row"><kbd>Enter</kbd> fire the section's interactive moment</div>
+    <div class="row"><kbd>Enter</kbd> fire the slide's interactive moment</div>
     <div class="row"><kbd>N</kbd> speaker notes</div>
     <div class="row"><kbd>F</kbd> fullscreen</div>
     <div class="row"><kbd>Z</kbd> cycle projector zoom</div>
-    <div class="row"><kbd>1</kbd> … <kbd>0</kbd> jump to section</div>
+    <div class="row"><kbd>1</kbd> … <kbd>0</kbd> jump to slide</div>
     <div class="row"><kbd>?</kbd> this help</div>
   </div>
 </div>
@@ -562,32 +629,41 @@
   const fire = name => { if (name && hooks[name]) hooks[name](); };
   const frags = s => Array.from(s.querySelectorAll('.frag'));
 
-  function show(n, { fromEnd = false, fromHistory = false } = {}) {
-    n = Math.max(0, Math.min(slides.length - 1, n));
-    const from = slides[i], dir = n > i ? 'fwd' : 'back';
-    slides.forEach(x => { if (x !== from) x.classList.remove('active', 'leaving', 'enter-fwd', 'enter-back', 'leave-fwd', 'leave-back'); });
+  const wipe = $('wipe');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let wiping = false;
+  function applySlide(n, fromEnd, fromHistory, mode) {
     const s = slides[n];
-    if (from && from !== s && from.classList.contains('active')) {
-      from.classList.remove('active', 'enter-fwd', 'enter-back');
-      from.classList.add('leaving', 'leave-' + dir);
-      from.addEventListener('animationend', () => from.classList.remove('leaving', 'leave-fwd', 'leave-back'), { once: true });
-    }
-    s.classList.remove('enter-fwd', 'enter-back');
-    void s.offsetWidth; // restart the enter animation
-    s.classList.add('active', 'enter-' + dir); i = n;
+    slides.forEach(x => x.classList.remove('active', 'stagger', 'plain', 'leaving', 'enter-fwd', 'enter-back', 'leave-fwd', 'leave-back'));
+    void s.offsetWidth;
+    s.classList.add('active', mode); i = n;
     frags(s).forEach(f => {
       if (fromEnd) { f.classList.add('on'); fire(f.dataset.on); }
       else { f.classList.remove('on'); fire(f.dataset.off); }
     });
     document.querySelectorAll('.nav-item').forEach((b, k) => b.classList.toggle('on', k === n));
     document.body.classList.toggle('cover-mode', s.classList.contains('cover'));
-    if (counter) counter.textContent = 'Section ' + (n + 1) + ' of ' + slides.length;
+    if (counter) counter.textContent = 'Slide ' + (n + 1) + ' of ' + slides.length;
     const ag = $('agenda'); clearTimeout(agendaT);
     if (ag) { ag.classList.remove('reveal'); if (s.contains(ag)) agendaT = setTimeout(() => ag.classList.add('reveal'), 5000); }
-    if (notesText) notesText.textContent = s.dataset.notes || 'No notes for this section.';
+    if (notesText) notesText.textContent = s.dataset.notes || 'No notes for this slide.';
     if (!fromHistory) { if (history.state === null) history.replaceState({ n }, '', '#' + (n + 1)); else if (history.state.n !== n) history.pushState({ n }, '', '#' + (n + 1)); }
     if (typeof syncArrows === 'function') syncArrows();
     window.scrollTo({ top: 0 });
+  }
+  function show(n, { fromEnd = false, fromHistory = false } = {}) {
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    const first = !slides.some(x => x.classList.contains('active'));
+    if (first || reduced || !wipe || n === i) { applySlide(n, fromEnd, fromHistory, first ? 'stagger' : 'plain'); return; }
+    if (wiping) return;
+    wiping = true;
+    const dir = n > i ? 'fwd' : 'back';
+    wipe.className = 'in-' + dir;
+    wipe.addEventListener('animationend', function onIn() {
+      applySlide(n, fromEnd, fromHistory, 'stagger');
+      wipe.className = 'out-' + dir;
+      wipe.addEventListener('animationend', function onOut() { wipe.className = ''; wiping = false; }, { once: true });
+    }, { once: true });
   }
   function next() {
     const f = frags(slides[i]).find(f => !f.classList.contains('on'));
