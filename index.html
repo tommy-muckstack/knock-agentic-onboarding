@@ -156,7 +156,7 @@
   /* ============ Cover (title section, full-bleed) ============ */
   body.cover-mode nav, body.cover-mode .topbar { display:none; }
   body.cover-mode .content { max-width:none; padding:0; }
-  .cover { position:relative; min-height:100vh; background:var(--cover-bg); color:var(--cover-fg); padding:4vw 6.5vw; display:flex; flex-direction:column; }
+  .cover { cursor:pointer; position:relative; min-height:100vh; background:var(--cover-bg); color:var(--cover-fg); padding:4vw 6.5vw; display:flex; flex-direction:column; }
   .cover .logo { height:4.2vw; min-height:40px; max-height:80px; width:auto; }
   .cover .logo img, .cover .logo svg { height:100%; width:auto; display:block; }
   .cover .title-block { margin:auto 0; padding-bottom:6vh; }
@@ -572,6 +572,8 @@
     }
   });
   if (help) help.addEventListener('click', () => help.hidden = true);
+  // cover: a click anywhere advances (links and buttons still work)
+  document.querySelectorAll('.panel.cover').forEach(c => c.addEventListener('click', e => { if (!e.target.closest('a, button')) next(); }));
 
   const start = parseInt(location.hash.slice(1), 10);
   show(isNaN(start) ? 0 : start - 1);
