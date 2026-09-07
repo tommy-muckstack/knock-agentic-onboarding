@@ -60,9 +60,17 @@
   /* ============ Shell ============ */
   .shell { display:flex; min-height:100vh; }
   nav {
-    width:var(--nav-w); flex:0 0 var(--nav-w); position:sticky; top:0; height:100vh; overflow:auto;
+    width:var(--nav-w); position:fixed; left:0; top:0; height:100vh; overflow:auto; z-index:9;
     background:var(--g10); border-right:1px solid var(--g30); padding:0 12px 24px;
+    transform:translateX(-100%); transition:transform var(--ease), box-shadow var(--ease);
   }
+  nav.open { transform:none; box-shadow:0 12px 40px var(--shadow); }
+  #nav-hot { position:fixed; left:0; top:0; width:140px; height:140px; z-index:8; }
+  #nav-tab { position:fixed; left:12px; top:12px; z-index:8; width:36px; height:36px; border-radius:var(--btn-radius); border:1px solid var(--g40); background:var(--white); color:var(--text-primary); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; opacity:0; transition:opacity var(--ease); }
+  #nav-tab .icon { font-size:18px; }
+  #nav-tab.show { opacity:1; }
+  #nav-tab:focus-visible { outline:none; box-shadow:0 0 0 3px var(--focus-ring); }
+  body.cover-mode #nav-tab { background:var(--cover-bg); color:var(--cover-fg); border-color:var(--g80); }
   .nav-head { height:56px; display:flex; align-items:center; padding:0 12px; font-size:15.5px; font-weight:var(--fw-strong); border-bottom:1px solid var(--g30); margin-bottom:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .nav-group { display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--text-secondary); padding:14px 12px 4px; }
   .nav-group .icon { font-size:16px; }
@@ -80,7 +88,7 @@
   .nav-item:focus-visible { outline:none; box-shadow:0 0 0 3px var(--focus-ring); }
 
   main { flex:1; min-width:0; }
-  .topbar { height:56px; border-bottom:1px solid var(--g30); padding:0 40px; display:flex; align-items:center; justify-content:space-between; font-size:15.5px; }
+  .topbar { height:56px; border-bottom:1px solid var(--g30); padding:0 40px 0 64px; display:flex; align-items:center; justify-content:space-between; font-size:15.5px; }
   .topbar .meta { color:var(--text-secondary); font-size:14px; font-variant-numeric:tabular-nums; }
   .content { max-width:1040px; margin:0 auto; padding:40px 40px 100px; }
 
@@ -166,7 +174,7 @@
   .step .n { font-size:12px; color:var(--g60); font-variant-numeric:tabular-nums; }
 
   /* ============ Cover (title section, full-bleed) ============ */
-  body.cover-mode nav, body.cover-mode .topbar { display:none; }
+  body.cover-mode .topbar { display:none; }
   body.cover-mode .content { max-width:none; padding:0; }
   .cover { cursor:pointer; position:relative; min-height:100vh; min-height:100dvh; background:var(--cover-bg); color:var(--cover-fg); padding:4vw 6.5vw; flex-direction:column; }
   .cover .logo { height:4.2vw; min-height:40px; max-height:80px; width:auto; }
@@ -179,7 +187,7 @@
   .cover .title-block.agenda { padding-bottom:0; }
   .cover .agenda-title { font-size:clamp(48px, 6.4vw, 128px); font-weight:500; letter-spacing:-.02em; line-height:1.05; margin:0 0 .45em; color:var(--cover-fg); }
   .agenda-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.6em; font-size:clamp(20px, 2.6vw, 52px); font-weight:500; line-height:1.25; }
-  .agenda-list li { display:flex; align-items:center; gap:.55em; }
+  .agenda-list li { display:flex; align-items:center; gap:.55em; white-space:nowrap; }
   .agenda-list .num { flex:none; width:1.45em; height:1.45em; border-radius:999px; border:2px solid var(--lime); color:var(--lime); display:inline-flex; align-items:center; justify-content:center; font-size:.62em; font-weight:600; line-height:1; }
   .agenda-list .desc { color:var(--cover-fg); opacity:0; transform:translateX(8px); transition:opacity .6s cubic-bezier(.2,.7,.2,1), transform .6s cubic-bezier(.2,.7,.2,1); display:inline-block; margin-left:.3em; }
   .agenda-list.reveal .desc { opacity:1; transform:none; }
@@ -204,7 +212,7 @@
   .frag.on { opacity:1; transform:none; }
 
   /* notes + help */
-  #notes { position:fixed; left:var(--nav-w); right:0; bottom:0; z-index:6; background:var(--white); border-top:1px solid var(--g30); box-shadow:0 -8px 24px var(--shadow); padding:14px 40px 20px; max-height:34vh; overflow:auto; }
+  #notes { position:fixed; left:0; right:0; bottom:0; z-index:6; background:var(--white); border-top:1px solid var(--g30); box-shadow:0 -8px 24px var(--shadow); padding:14px 40px 20px; max-height:34vh; overflow:auto; }
   #notes .label { font-size:13px; font-weight:var(--fw-strong); color:var(--blue); margin-bottom:4px; }
   #help { position:fixed; inset:0; z-index:7; background:var(--scrim); display:grid; place-items:center; }
   #help .card { background:var(--white); border:1px solid var(--g30); border-radius:12px; padding:20px 24px; min-width:360px; }
@@ -214,13 +222,16 @@
   @media (prefers-reduced-motion:reduce) {
     .panel { animation:none !important; }
     .panel.leaving { display:none !important; }
-    .frag, .app-card, .step, .nav-item, .btn, .btn-sm, #arrows, .arrow, .agenda-list .desc { transition:none; }
+    .frag, .app-card, .step, .nav-item, .btn, .btn-sm, #arrows, .arrow, .agenda-list .desc, nav, #nav-tab { transition:none; }
     .cursor::after { animation:none; }
   }
   @media (max-width:900px) { .demo-grid { grid-template-columns:1fr; } }
   @media (max-width:820px) {
     .shell { flex-direction:column; }
-    nav { width:auto; flex:none; height:auto; position:sticky; top:0; z-index:4; border-right:0; border-bottom:1px solid var(--g30); padding:0; }
+    nav { width:auto; flex:none; height:auto; position:sticky; top:0; z-index:4; border-right:0; border-bottom:1px solid var(--g30); padding:0; transform:none; box-shadow:none; }
+    #nav-hot, #nav-tab { display:none; }
+    body.cover-mode nav { display:none; }
+    .topbar { padding-left:20px; }
     .nav-head { display:none; }
     #navlist { display:flex; align-items:center; gap:4px; overflow-x:auto; padding:8px 12px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
     #navlist::-webkit-scrollbar { display:none; }
@@ -254,10 +265,13 @@
   <symbol id="i-book" viewBox="0 0 24 24" fill="none"><path d="M12 21L11.8999 20.8499C11.2053 19.808 10.858 19.287 10.3991 18.9098C9.99286 18.5759 9.52476 18.3254 9.02161 18.1726C8.45325 18 7.82711 18 6.57482 18H5.2C4.07989 18 3.51984 18 3.09202 17.782C2.71569 17.5903 2.40973 17.2843 2.21799 16.908C2 16.4802 2 15.9201 2 14.8V6.2C2 5.07989 2 4.51984 2.21799 4.09202C2.40973 3.71569 2.71569 3.40973 3.09202 3.21799C3.51984 3 4.07989 3 5.2 3H5.6C7.84021 3 8.96031 3 9.81596 3.43597C10.5686 3.81947 11.1805 4.43139 11.564 5.18404C12 6.03968 12 7.15979 12 9.4M12 21V9.4M12 21L12.1001 20.8499C12.7947 19.808 13.142 19.287 13.6009 18.9098C14.0071 18.5759 14.4752 18.3254 14.9784 18.1726C15.5467 18 16.1729 18 17.4252 18H18.8C19.9201 18 20.4802 18 20.908 17.782C21.2843 17.5903 21.5903 17.2843 21.782 16.908C22 16.4802 22 15.9201 22 14.8V6.2C22 5.07989 22 4.51984 21.782 4.09202C21.5903 3.71569 21.2843 3.40973 20.908 3.21799C20.4802 3 19.9201 3 18.8 3H18.4C16.1598 3 15.0397 3 14.184 3.43597C13.4314 3.81947 12.8195 4.43139 12.436 5.18404C12 6.03968 12 7.15979 12 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow-right-circle" viewBox="0 0 24 24" fill="none"><path d="M12 16L16 12M16 12L12 8M16 12H8M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow-left-circle" viewBox="0 0 24 24" fill="none"><path d="M12 8L8 12M8 12L12 16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24" fill="none"><path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-funnel" viewBox="0 0 24 24" fill="none"><path d="M2 4.6C2 4.03995 2 3.75992 2.10899 3.54601C2.20487 3.35785 2.35785 3.20487 2.54601 3.10899C2.75992 3 3.03995 3 3.6 3H20.4C20.9601 3 21.2401 3 21.454 3.10899C21.6422 3.20487 21.7951 3.35785 21.891 3.54601C22 3.75992 22 4.03995 22 4.6V5.26939C22 5.53819 22 5.67259 21.9672 5.79756C21.938 5.90831 21.8901 6.01323 21.8255 6.10776C21.7526 6.21443 21.651 6.30245 21.4479 6.4785L15.0521 12.0215C14.849 12.1975 14.7474 12.2856 14.6745 12.3922C14.6099 12.4868 14.562 12.5917 14.5328 12.7024C14.5 12.8274 14.5 12.9618 14.5 13.2306V18.4584C14.5 18.6539 14.5 18.7517 14.4685 18.8363C14.4406 18.911 14.3953 18.9779 14.3363 19.0315C14.2695 19.0922 14.1787 19.1285 13.9971 19.2012L10.5971 20.5612C10.2296 20.7082 10.0458 20.7817 9.89827 20.751C9.76927 20.7242 9.65605 20.6476 9.58325 20.5377C9.5 20.4122 9.5 20.2142 9.5 19.8184V13.2306C9.5 12.9618 9.5 12.8274 9.46715 12.7024C9.43805 12.5917 9.39014 12.4868 9.32551 12.3922C9.25258 12.2856 9.15102 12.1975 8.94789 12.0215L2.55211 6.4785C2.34898 6.30245 2.24742 6.21443 2.17449 6.10776C2.10986 6.01323 2.06195 5.90831 2.03285 5.79756C2 5.67259 2 5.53819 2 5.26939V4.6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-thumbs-up" viewBox="0 0 24 24" fill="none"><path d="M7 22V11M2 13V20C2 21.1046 2.89543 22 4 22H17.4262C18.907 22 20.1662 20.9197 20.3914 19.4562L21.4683 12.4562C21.7479 10.6389 20.3418 9 18.5032 9H15C14.4477 9 14 8.55228 14 8V4.46584C14 3.10399 12.896 2 11.5342 2C11.2093 2 10.915 2.1913 10.7831 2.48812L7.26394 10.4061C7.10344 10.7673 6.74532 11 6.35013 11H4C2.89543 11 2 11.8954 2 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
 <div class="shell">
+  <div id="nav-hot" aria-hidden="true"></div>
+  <button id="nav-tab" type="button" aria-label="Open sections" aria-expanded="false"><svg class="icon"><use href="#i-menu"/></svg></button>
   <nav aria-label="Sections">
     <div class="nav-head">Your new user is an agent</div>
     <div id="navlist"></div>
@@ -288,9 +302,9 @@
     <h1 class="agenda-title">Agenda</h1>
     <ol class="agenda-list" id="agenda">
       <li><span class="num">1</span><span class="item"><span class="lime">Onboarding 101</span></span></li>
-      <li><span class="num">2</span><span class="item"><span class="lime">Acquisition</span><span class="desc">.. how does an agent find you, choose you &amp; get in without a human?</span></span></li>
-      <li><span class="num">3</span><span class="item"><span class="lime">Activation</span><span class="desc">.. what is an aha for an agent?</span></span></li>
-      <li><span class="num">4</span><span class="item"><span class="lime">Measurement</span><span class="desc">.. what do you count?</span></span></li>
+      <li><span class="num">2</span><span class="item"><span class="lime">Acquisition</span><span class="desc">.. agentic signup</span></span></li>
+      <li><span class="num">3</span><span class="item"><span class="lime">Activation</span><span class="desc">.. agentic aha</span></span></li>
+      <li><span class="num">4</span><span class="item"><span class="lime">Measurement</span><span class="desc">.. what means success</span></span></li>
     </ol>
   </div>
 </section>
@@ -655,6 +669,16 @@
     }
   });
   if (help) help.addEventListener('click', () => help.hidden = true);
+  // nav drawer: hover the top-left corner (or the menu tab) to fly out, leave to collapse
+  const nav = document.querySelector('nav'), navHot = $('nav-hot'), navTab = $('nav-tab');
+  let navT = null;
+  function openNav() { clearTimeout(navT); if (nav) nav.classList.add('open'); if (navTab) { navTab.classList.add('show'); navTab.setAttribute('aria-expanded', 'true'); } }
+  function closeNavSoon() { clearTimeout(navT); navT = setTimeout(() => { if (nav && !nav.matches(':hover')) { nav.classList.remove('open'); if (navTab) navTab.setAttribute('aria-expanded', 'false'); } }, 220); }
+  [navHot, navTab, nav].forEach(el => { if (!el) return; el.addEventListener('mouseenter', openNav); el.addEventListener('mouseleave', closeNavSoon); });
+  if (navTab) navTab.addEventListener('click', () => nav && nav.classList.contains('open') ? (nav.classList.remove('open'), navTab.setAttribute('aria-expanded', 'false')) : openNav());
+  addEventListener('mousemove', e => { if (navTab) navTab.classList.toggle('show', e.clientX < 220 && e.clientY < 220 || (nav && nav.classList.contains('open'))); }, { passive: true });
+  if (navlist) navlist.addEventListener('click', e => { if (e.target.closest('.nav-item') && nav) { nav.classList.remove('open'); if (navTab) navTab.setAttribute('aria-expanded', 'false'); } });
+
   // hover arrows
   const arrows = $('arrows'), aPrev = $('arrow-prev'), aNext = $('arrow-next');
   let hideT = null;
