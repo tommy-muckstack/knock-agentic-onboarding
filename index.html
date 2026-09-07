@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your New User Is an Agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+  /* ============ Tokens (light-only by design; no dark-mode blocks) ============ */
+  :root {
+    --blue:#0052F2; --blue-dark:#001A4F; --lilac:#6980FF; --violet:#A373FF;
+    --black:#000000; --white:#FFFFFF;
+    --g10:#FAFBFD; --g20:#F2F4F8; --g25:#EDEFF3; --g30:#E4E7EC;
+    --g40:#D5D9E0; --g50:#B9BFC7; --g60:#868D95; --g70:#697077; --g80:#50565B; --g100:#242A2E;
+    --success-text:#1D7A46; --success-bg:#E6F6EC;
+    --error-text:#F23845;
+    --info-text:#3B4CD8; --info-bg:#E8EBFF;
+    --chip-bg:#E6EEFF; --chip-border:#BBD0FF; --chip-text:#0043C4;
+    --row-hover:#F2F5FF;
+    --todo-bg:#F5F1FF; --todo-border:#D9CBFF;
+    --focus-ring:rgba(0,82,242,.32);
+    --scrim:rgba(0,0,0,.55);
+    --shadow:rgba(0,0,0,.06);
+    --text-primary:#000000; --text-secondary:#3A4045;
+    --fw-body:600; --fw-strong:700; --fs-body:16px;
+    --nav-w:252px;
+    --btn-h:30px; --btn-h-sm:26px; --btn-px:12px; --btn-px-sm:9px; --btn-fs:13px; --btn-fs-sm:12px; --btn-radius:6px;
+    --ease:.26s cubic-bezier(.2,.7,.2,1);
+    --font:'Gellix','Poppins',-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
+  html, body { margin:0; }
+  body {
+    background:var(--white); color:var(--text-primary);
+    font-family:var(--font); font-size:var(--fs-body); font-weight:var(--fw-body); line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  p, li, td, th, div, span, button, a, h1, h2, h3, h4, footer, summary { font-family:inherit; }
+  img { max-width:100%; }
+  a { color:var(--blue); font-weight:var(--fw-strong); text-decoration:none; }
+  a:hover { color:var(--blue-dark); text-decoration:underline; }
+
+  /* ============ Shell ============ */
+  .shell { display:flex; min-height:100vh; }
+  nav {
+    width:var(--nav-w); flex:0 0 var(--nav-w); position:sticky; top:0; height:100vh; overflow:auto;
+    background:var(--g10); border-right:1px solid var(--g30); padding:0 12px 24px;
+  }
+  .nav-head { height:56px; display:flex; align-items:center; padding:0 12px; font-size:15.5px; font-weight:var(--fw-strong); border-bottom:1px solid var(--g30); margin-bottom:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .nav-group { font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--text-secondary); padding:14px 12px 4px; }
+  .nav-item {
+    display:flex; align-items:center; gap:10px; width:100%; text-align:left;
+    padding:7px 12px; border:1px solid transparent; border-radius:var(--btn-radius); background:transparent;
+    font-size:14px; font-weight:var(--fw-body); color:var(--text-primary); cursor:pointer;
+    transition:background var(--ease), color var(--ease);
+  }
+  .nav-item .n { font-size:12px; color:var(--g60); min-width:18px; font-variant-numeric:tabular-nums; }
+  .nav-item:hover { background:var(--row-hover); }
+  .nav-item.on { background:var(--chip-bg); border-color:var(--chip-border); color:var(--chip-text); }
+  .nav-item.on .n { color:var(--chip-text); }
+  .nav-item:focus-visible { outline:none; box-shadow:0 0 0 3px var(--focus-ring); }
+
+  main { flex:1; min-width:0; }
+  .topbar { height:56px; border-bottom:1px solid var(--g30); padding:0 40px; display:flex; align-items:center; justify-content:space-between; font-size:15.5px; }
+  .topbar .meta { color:var(--text-secondary); font-size:14px; font-variant-numeric:tabular-nums; }
+  .content { max-width:1040px; margin:0 auto; padding:40px 40px 100px; }
+
+  /* ============ Panels ============ */
+  .panel { display:none; }
+  .panel.active { display:block; animation:pane var(--ease); }
+  @keyframes pane { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  .panel-head { border-bottom:1px solid var(--g30); padding-bottom:20px; margin-bottom:28px; }
+  .eyebrow { font-size:14px; color:var(--text-secondary); margin:0 0 6px; }
+  h1 { font-size:31px; font-weight:var(--fw-strong); letter-spacing:-.01em; line-height:1.25; margin:0 0 10px; max-width:620px; text-wrap:balance; }
+  h2 { font-size:17px; font-weight:var(--fw-strong); letter-spacing:-.01em; margin:32px 0 10px; }
+  h2:first-of-type { margin-top:0; }
+  h3.sub-h { font-size:15.5px; font-weight:var(--fw-strong); margin:0 0 8px; }
+  h4 { font-size:16px; font-weight:var(--fw-strong); color:var(--blue); margin:0 0 8px; }
+  .panel-head p, p.intro { max-width:680px; margin:0; }
+  .panel-head p + p { margin-top:8px; }
+  .panel-head p b { color:var(--violet); }
+  p.tnote { font-size:13.5px; color:var(--text-secondary); margin:8px 0 0; }
+  ul.notes, ol.notes { margin:0; padding-left:22px; }
+  ul.notes li, ol.notes li { margin-bottom:8px; }
+  .footer-line { margin-top:32px; font-size:14px; color:var(--text-secondary); }
+
+  /* ============ Components ============ */
+  .callout { background:var(--row-hover); border:1px solid var(--chip-border); border-radius:12px; padding:16px; margin:16px 0; }
+  .callout .label { font-size:13px; font-weight:var(--fw-strong); color:var(--blue); margin-bottom:4px; }
+  .todo { background:var(--todo-bg); border:1px solid var(--todo-border); border-radius:12px; padding:16px; margin:16px 0; }
+  .todo .label { font-size:13px; font-weight:var(--fw-strong); color:var(--violet); margin-bottom:4px; }
+
+  .app-grid { display:flex; gap:16px; flex-wrap:wrap; margin:16px 0; }
+  .app-card { flex:1; min-width:220px; background:var(--white); border:1px solid var(--g30); border-radius:12px; padding:18px; transition:opacity var(--ease), background var(--ease); }
+  .app-card.muted { background:var(--g10); color:var(--g70); }
+  .app-card.muted h4 { color:var(--g70); }
+  .app-card p { margin:0; }
+  .app-card ul.notes { padding-left:20px; }
+  .app-card .path { font-size:13.5px; color:var(--text-secondary); margin-top:10px; }
+
+  .table-scroll { border:1px solid var(--g30); border-radius:12px; max-height:420px; overflow:auto; margin:12px 0 0; }
+  table.dtable { width:100%; border-collapse:collapse; font-size:15px; }
+  .dtable th { text-align:left; padding:10px 14px; background:var(--g10); border-bottom:1px solid var(--g30); font-weight:var(--fw-strong); font-size:13px; position:sticky; top:0; white-space:nowrap; }
+  .dtable td { padding:10px 14px; border-bottom:1px solid var(--g30); vertical-align:top; }
+  .dtable tr:last-child td { border-bottom:0; }
+  .dtable tr.nodata-row td { background:var(--g10); color:var(--g70); }
+  .dtable tr.primary-row td { background:var(--row-hover); }
+  .dtable td.num { font-weight:var(--fw-strong); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .dtable td.new { color:var(--blue); font-weight:var(--fw-strong); }
+
+  .chip { display:inline-flex; align-items:center; height:22px; padding:0 9px; border-radius:999px; font-size:12.5px; font-weight:var(--fw-strong); white-space:nowrap; border:1px solid transparent; }
+  .chip.success { background:var(--success-bg); color:var(--success-text); }
+  .chip.neutral { background:var(--g20); color:var(--g80); }
+  .chip.info { background:var(--info-bg); color:var(--info-text); }
+  .chip.warn { background:var(--todo-bg); color:var(--violet); }
+
+  .btn, .btn-sm {
+    display:inline-flex; align-items:center; justify-content:center; box-sizing:border-box; line-height:1;
+    height:var(--btn-h); padding:0 var(--btn-px); font-size:var(--btn-fs); font-family:inherit; font-weight:var(--fw-strong);
+    color:var(--text-primary); border:1px solid var(--g40); border-radius:var(--btn-radius); background:var(--white); appearance:none; cursor:pointer;
+    text-decoration:none; transition:border-color var(--ease), color var(--ease);
+  }
+  .btn-sm { height:var(--btn-h-sm); padding:0 var(--btn-px-sm); font-size:var(--btn-fs-sm); }
+  .btn:hover, .btn-sm:hover { border-color:var(--blue); color:var(--blue); text-decoration:none; }
+  .btn:focus-visible, .btn-sm:focus-visible { outline:none; box-shadow:0 0 0 3px var(--focus-ring); }
+  .btn.on, .btn-sm.on { background:var(--chip-bg); border-color:var(--chip-border); color:var(--chip-text); }
+  .btn[disabled] { color:var(--g60); cursor:default; border-color:var(--g30); }
+
+  /* mock window (demo) */
+  .mock { border:1px solid var(--g30); border-radius:8px; overflow:hidden; background:var(--white); }
+  .mock-bar { height:34px; display:flex; align-items:center; gap:6px; padding:0 12px; background:var(--g10); border-bottom:1px solid var(--g30); font-size:12.5px; color:var(--text-secondary); }
+  .mock-bar i { width:10px; height:10px; border-radius:999px; background:var(--g40); display:inline-block; }
+  .mock-body { padding:14px 16px; font-family:var(--mono); font-size:13.5px; line-height:1.6; min-height:300px; max-height:360px; overflow:auto; font-weight:500; }
+  .ln { white-space:pre-wrap; }
+  .ln.cmd { color:var(--text-primary); font-weight:700; }
+  .ln.dim { color:var(--g70); }
+  .ln.ok { color:var(--success-text); }
+  .ln.warn { color:var(--violet); }
+  .cursor::after { content:"▍"; color:var(--blue); animation:blink 1s steps(2) infinite; }
+  @keyframes blink { to { opacity:0; } }
+  .demo-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:16px; margin-top:16px; }
+  .steps { display:flex; flex-direction:column; gap:8px; }
+  .step { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 14px; border:1px solid var(--g30); border-radius:12px; background:var(--white); transition:background var(--ease); }
+  .step.live { background:var(--row-hover); border-color:var(--chip-border); }
+  .step .t { display:flex; gap:10px; align-items:baseline; }
+  .step .n { font-size:12px; color:var(--g60); font-variant-numeric:tabular-nums; }
+
+  /* fragments */
+  .frag { opacity:0; transform:translateY(8px); transition:opacity var(--ease), transform var(--ease); }
+  .frag.on { opacity:1; transform:none; }
+
+  /* notes + help */
+  #notes { position:fixed; left:var(--nav-w); right:0; bottom:0; z-index:6; background:var(--white); border-top:1px solid var(--g30); box-shadow:0 -8px 24px var(--shadow); padding:14px 40px 20px; max-height:34vh; overflow:auto; }
+  #notes .label { font-size:13px; font-weight:var(--fw-strong); color:var(--blue); margin-bottom:4px; }
+  #help { position:fixed; inset:0; z-index:7; background:var(--scrim); display:grid; place-items:center; }
+  #help .card { background:var(--white); border:1px solid var(--g30); border-radius:12px; padding:20px 24px; min-width:360px; }
+  #help kbd { display:inline-flex; align-items:center; justify-content:center; min-width:34px; height:26px; padding:0 8px; margin-right:10px; border:1px solid var(--g40); border-radius:var(--btn-radius); background:var(--g10); font-size:12.5px; font-weight:var(--fw-strong); font-family:inherit; }
+  #help .row { display:flex; align-items:center; margin:6px 0; font-size:14px; }
+
+  @media (prefers-reduced-motion:reduce) {
+    .panel.active { animation:none; }
+    .frag, .app-card, .step, .nav-item, .btn, .btn-sm { transition:none; }
+    .cursor::after { animation:none; }
+  }
+  @media (max-width:900px) { .demo-grid { grid-template-columns:1fr; } }
+  @media (max-width:820px) {
+    .shell { flex-direction:column; }
+    nav { width:auto; flex:none; height:auto; position:static; border-right:0; border-bottom:1px solid var(--g30); }
+    .content, .topbar { padding-left:20px; padding-right:20px; }
+    #notes { left:0; }
+  }
+  @media (max-width:520px) { .app-grid { flex-direction:column; } }
+</style>
+</head>
+<body>
+<div class="shell">
+  <nav aria-label="Sections">
+    <div class="nav-head">Your new user is an agent</div>
+    <div id="navlist"></div>
+  </nav>
+  <main>
+    <div class="topbar">
+      <span>Knock · Marketing Engineer Meetup · Sept 15, 2026</span>
+      <span class="meta" id="counter"></span>
+    </div>
+    <div class="content">
+
+<!-- 1 · TITLE -->
+<section class="panel" data-nav="Title" data-group="Open" data-notes="Two weeks ago I told an agent I needed an oil change. It found my mechanic from old receipts, picked them, booked the slot, and put the invite on my calendar and my wife's. Nobody at that shop did anything to earn that booking. That is an acquisition funnel with no human in it. Tonight, put your product on the other side of that funnel.">
+  <div class="panel-head">
+    <p class="eyebrow">Beyond human onboarding</p>
+    <h1>Your new user is an agent</h1>
+    <p>The acquisition funnel when the account isn't a person. <b>Same five steps you already run.</b> A different reader at every one of them.</p>
+  </div>
+  <div class="callout frag">
+    <div class="label">The opener</div>
+    An agent booked my oil change last month. It found the shop from old receipts, picked it, booked the slot, and put the invite on two calendars. Nobody at that shop did anything to earn that booking.
+  </div>
+  <p class="footer-line">Tommy Keeley · Head of Growth · muckstack.com</p>
+</section>
+
+<!-- 2 · AGENDA -->
+<section class="panel" data-nav="Agenda" data-group="Open" data-notes="Same funnel you already run. Different user. I'll take each step, then show one live.">
+  <div class="panel-head">
+    <p class="eyebrow">Agenda</p>
+    <h1>Same funnel. Different user.</h1>
+    <p>Five steps, one question each. Then one of them live.</p>
+  </div>
+  <div class="app-grid">
+    <div class="app-card frag"><h4>1 · Find</h4><p>How does an agent find you?</p></div>
+    <div class="app-card frag"><h4>2 · Pick</h4><p>Why would it choose you?</p></div>
+    <div class="app-card frag"><h4>3 · Sign up</h4><p>Can it get in without a human?</p></div>
+    <div class="app-card frag"><h4>4 · Activate</h4><p>What is an aha for an agent?</p></div>
+    <div class="app-card frag"><h4>5 · Measure</h4><p>What do you count?</p></div>
+  </div>
+  <p class="tnote">Numbered because it is the order a new account moves through, nothing else.</p>
+</section>
+
+<!-- 3 · TWO JOURNEYS -->
+<section class="panel" id="journeys" data-nav="Two journeys" data-group="Open" data-notes="Every onboarding flow you've ever built optimizes the left column. Trust, motivation, a nice empty state, a checklist that makes a person feel progress. The agent doesn't feel anything. It needs the right column. These are different design problems, and most of us are still only solving the first one. The useful part: designing for the agent bar usually improves the human flow too, because you were guessing about the human's needs and you cannot guess about the agent's.">
+  <div class="panel-head">
+    <p class="eyebrow">Two journeys</p>
+    <h1>Same product. Different user.</h1>
+    <p>Every onboarding flow you've built optimizes the left card. <b>The agent needs the right card, and almost nobody is designing for it yet.</b></p>
+  </div>
+  <div class="app-grid">
+    <div class="app-card" id="card-human">
+      <h4>A human needs</h4>
+      <ul class="notes"><li>confidence</li><li>comprehension</li><li>motivation</li><li>permission</li></ul>
+      <div class="path">discover → evaluate → authorize → trust → adopt</div>
+    </div>
+    <div class="app-card" id="card-agent">
+      <h4>An agent needs</h4>
+      <ul class="notes"><li>discoverability</li><li>explicit instructions</li><li>deterministic tools</li><li>credentials</li><li>machine-readable errors</li><li>verification</li></ul>
+      <div class="path">resolve instructions → authenticate → execute → verify → report</div>
+    </div>
+  </div>
+  <span class="frag" data-on="journeysAgent" data-off="journeysReset" hidden></span>
+  <p class="tnote">Press → to step past the human list. Designing for the agent bar usually improves the human flow too: you were guessing about the human, and you cannot guess about the agent.</p>
+</section>
+
+<!-- 4 · FIND -->
+<section class="panel" data-nav="Find" data-group="The funnel" data-notes="Discovery moved. Search is being joined by answer engines and agents reading your docs, your package README, your skills, marketplaces, public repos, community answers, third-party citations. Those decide whether an agent recommends you or can even use you. We have humans on keyboards seeding Reddit every week, not for people, for the training data. If your marketing site is beautiful and your docs are a maze, you are invisible to the reader that matters now.">
+  <div class="panel-head">
+    <p class="eyebrow">Step 1 of 5 · Find</p>
+    <h1>Your docs are your homepage now</h1>
+    <p>The question used to be "can a person find our website?" Now it's <b>"can an agent find the official path, understand it, and execute it correctly?"</b></p>
+  </div>
+  <h2>Where discovery moved</h2>
+  <ul class="notes">
+    <li class="frag">Docs, package READMEs, skills, marketplaces, public repos.</li>
+    <li class="frag">Community answers and third-party citations. These decide whether an agent can even use you.</li>
+    <li class="frag">A beautiful marketing site with maze docs is invisible to the reader that matters now.</li>
+  </ul>
+  <div class="callout frag">
+    <div class="label">Evidence</div>
+    45% of docs requests now come from agents, not browsers.
+    <p class="tnote">Mintlify, 2026, share of documentation requests across their hosted docs sites, agent user-agents vs browsers. Their number, not mine.</p>
+  </div>
+</section>
+
+<!-- 5 · PICK -->
+<section class="panel" data-nav="Pick" data-group="The funnel" data-notes="A legacy story in the training data is enterprise, heavy, long implementation. So when an agent compares tools it reaches for the lighter one. That's not a positioning problem you fix with a homepage refresh. It's a corpus problem. The novel part for a marketing room: your share of voice metric now has a twin, agent pick rate, and the levers are docs, READMEs, community answers and build-in-public posts, not ad spend. Nobody has published theirs yet. Be first.">
+  <div class="panel-head">
+    <p class="eyebrow">Step 2 of 5 · Pick</p>
+    <h1>Agents choose from what they've already read</h1>
+    <p>An agent picks from training data that is six to eighteen months old. <b>Whatever the internet said about you last year is what gets you picked this year.</b></p>
+  </div>
+  <ul class="notes">
+    <li class="frag">A homepage refresh does not fix this. It is a corpus problem, not a positioning problem.</li>
+    <li class="frag">Share of voice now has a twin: agent pick rate. The levers are docs, READMEs, community answers, and build-in-public posts. Not ad spend.</li>
+  </ul>
+  <div class="todo frag">
+    <div class="label">Needs a decision</div>
+    Your narrative lag is a tax. Pay it down in public. Nobody has published an agent pick rate yet. Be first.
+  </div>
+</section>
+
+<!-- 6 · SIGN UP -->
+<section class="panel" id="signup" data-nav="Sign up" data-group="The funnel" data-notes="Most setup experiences are a menu of competing routes when the customer wants one recommendation. A human can triangulate. An agent has to guess, and every judgment call you left implicit is a place it guesses wrong. So: one primary door, agent instruction. A side door, repo connection. A quiet fallback, the manual snippet. Different doors, same setup logic, same verification. And use deterministic tools for the parts where guessing is dangerous: authentication, credentials, project selection, package install. Let the agent reason about the business, not about your OAuth flow.">
+  <div class="panel-head">
+    <p class="eyebrow">Step 3 of 5 · Sign up</p>
+    <h1>One path, not a menu</h1>
+    <p>Most setup is a menu of competing routes when the customer wants one recommendation. A human triangulates. <b>An agent guesses, and every implicit judgment call is a place it guesses wrong.</b></p>
+  </div>
+  <div class="table-scroll">
+    <table class="dtable" id="doors">
+      <thead><tr><th>Door</th><th>What the agent has to guess</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr data-keep="1"><td>Agent instruction in the docs</td><td>Nothing. One stable instruction, a versioned skill it can run.</td><td><span class="chip neutral">One of five</span></td></tr>
+        <tr><td>README</td><td>Whether it is current, and whether it is the same path as the docs.</td><td><span class="chip neutral">One of five</span></td></tr>
+        <tr><td>Code snippet</td><td>Which project, which key, which version.</td><td><span class="chip neutral">One of five</span></td></tr>
+        <tr><td>UI wizard</td><td>It cannot click through it at all.</td><td><span class="chip neutral">One of five</span></td></tr>
+        <tr><td>Support ticket</td><td>A human is now in the loop. Not agentic.</td><td><span class="chip neutral">One of five</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">Press → to collapse to one primary door. Side door: repo connection. Quiet fallback: the manual snippet. Same setup logic and same verification behind all three.</p>
+  <span class="frag" data-on="doorsCollapse" data-off="doorsReset" hidden></span>
+  <div class="callout frag">
+    <div class="label">Use deterministic tools where guessing is dangerous</div>
+    Authentication, credentials, project selection, package install. Let the agent reason about the business, not about your OAuth flow.
+  </div>
+</section>
+
+<!-- 7 · ACTIVATE -->
+<section class="panel" data-nav="Activate" data-group="The funnel" data-notes="Humans need trust and a moment. Agents need a path with no dead ends. If the first task fails it moves to the next product and never tells you. So the bar isn't fewer clicks. It's less human work. And validation is the piece everyone skips: an agent that instruments forty events and silently gets twelve wrong has created a mess you find in a QBR three months later. The skill has to check its own work and report what it couldn't verify. Installed is not the finish line.">
+  <div class="panel-head">
+    <p class="eyebrow">Step 4 of 5 · Activate</p>
+    <h1>Agents don't get an aha. They finish or they leave.</h1>
+    <p>Setup means the system works. Activation means someone got value. <b>For an agent that is a trusted outcome with an obvious next action.</b></p>
+  </div>
+  <div class="table-scroll">
+    <table class="dtable">
+      <thead><tr><th>Step</th><th>What happens</th><th>Who does the work</th><th>Checked</th></tr></thead>
+      <tbody>
+        <tr class="frag"><td class="num">1</td><td>State intent: "instrument checkout for this business"</td><td>Human, one sentence</td><td><span class="chip neutral">n/a</span></td></tr>
+        <tr class="frag"><td class="num">2</td><td>Agent configures: taxonomy, events, install</td><td>Agent</td><td><span class="chip warn">Not yet</span></td></tr>
+        <tr class="frag"><td class="num">3</td><td>Verify: synthetic signal, validation ID, confirm receipt</td><td>Agent, against the product</td><td><span class="chip success">Verified</span></td></tr>
+        <tr class="frag primary-row"><td class="num">4</td><td>First value: a dashboard with real data, and the next action named</td><td>Human reads, agent proposes</td><td><span class="chip success">Activated</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">The bar is not fewer clicks. It is less human work. Step 3 is the one everyone skips: forty events instrumented, twelve silently wrong, found in a review three months later.</p>
+</section>
+
+<!-- 8 · DEMO -->
+<section class="panel" id="demo" data-nav="Live demo" data-group="The funnel" data-notes="Two minutes. One claim: what used to take a data team, a busy engineer, and three rounds with solutions architects now happens in a session. Narrate what it is doing at each funnel step: find the instruction, run it, verify with a validation ID, land on first value. Be honest on stage: messy legacy codebases still need people. The interesting part is where the work moved.">
+  <div class="panel-head">
+    <p class="eyebrow">Live</p>
+    <h1>A quarter of setup in one session</h1>
+    <p>Point an agent at a scratch repo. <b>Watch it find the path, run the skill, verify, and hand a human a dashboard.</b> Messy legacy codebases still need people. The interesting part is where the work moved.</p>
+  </div>
+  <div class="demo-grid">
+    <div class="mock" aria-label="Agent session, simulated" role="region">
+      <div class="mock-bar"><i></i><i></i><i></i><span style="margin-left:6px">agent · scratch-repo</span></div>
+      <div class="mock-body" id="term"><div class="ln dim">$ press Run, or Enter</div></div>
+    </div>
+    <div class="steps">
+      <div class="step" data-step="find"><span class="t"><span class="n">01</span>Find the instruction</span><span class="chip neutral">Waiting</span></div>
+      <div class="step" data-step="run"><span class="t"><span class="n">02</span>Run the skill</span><span class="chip neutral">Waiting</span></div>
+      <div class="step" data-step="verify"><span class="t"><span class="n">03</span>Verify with a validation ID</span><span class="chip neutral">Waiting</span></div>
+      <div class="step" data-step="value"><span class="t"><span class="n">04</span>Hand a human a dashboard</span><span class="chip neutral">Waiting</span></div>
+      <div><button class="btn" id="runbtn" type="button">Run the agent</button></div>
+    </div>
+  </div>
+  <p class="tnote">Simulated session for rehearsal. On the night this panel is the cue to switch to the live screen.</p>
+</section>
+
+<!-- 9 · MEASURE -->
+<section class="panel" data-nav="Measure" data-group="The funnel" data-notes="One caution, in my own words: setup completion is not activation, and a first signal is not value. Compare retention of setup completers to non-completers before you claim anything. The two I'd start with are the ones with no old-world counterpart: hands-off completion rate and conversion by instruction version. When an agent reads your docs to install you, your instruction file is the onboarding flow, and you can version it and test it like one.">
+  <div class="panel-head">
+    <p class="eyebrow">Step 5 of 5 · Measure</p>
+    <h1>Same funnel, new numbers</h1>
+    <p>The old metric is already in your dashboard. <b>The new one has no old-world twin.</b></p>
+  </div>
+  <div class="table-scroll">
+    <table class="dtable">
+      <thead><tr><th>Stage</th><th>Old metric</th><th>Agent metric</th><th>Why it matters</th></tr></thead>
+      <tbody>
+        <tr class="frag"><td class="num">Find</td><td>Organic traffic</td><td class="new">Agent share of docs traffic</td><td>Tells you who is actually reading</td></tr>
+        <tr class="frag"><td class="num">Pick</td><td>Share of voice</td><td class="new">Agent pick rate</td><td>Training data is the new search results page</td></tr>
+        <tr class="frag"><td class="num">Sign up</td><td>Signup conversion</td><td class="new">Hands-off completion rate</td><td>Zero human steps, or it isn't agentic</td></tr>
+        <tr class="frag"><td class="num">Activate</td><td>Time to aha</td><td class="new">Time to first trusted outcome, verification rate</td><td>"It ran" is not "it worked"</td></tr>
+        <tr class="frag"><td class="num">All of it</td><td>A/B test on the page</td><td class="new">Conversion by instruction version</td><td>Your docs are the experiment now</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tnote">No numbers on this table on purpose. The agent metrics are definitions, not results. Setup completion is not activation and a first signal is not value: compare retention of completers to non-completers before claiming anything.</p>
+  <div class="callout frag">
+    <div class="label">Start with the two that have no old-world twin</div>
+    Hands-off completion rate, and conversion by instruction version. When an agent reads your docs to install you, the instruction file is the onboarding flow. Version it and test it like one.
+  </div>
+</section>
+
+<!-- 10 · HOMEWORK -->
+<section class="panel" data-nav="Homework" data-group="Close" data-notes="That's the whole ask. Takes an hour. You'll learn more about your funnel than a quarter of dashboards.">
+  <div class="panel-head">
+    <p class="eyebrow">This week</p>
+    <h1>Point an agent at your own docs</h1>
+    <p>One hour. <b>You will learn more about your funnel than a quarter of dashboards.</b></p>
+  </div>
+  <div class="app-grid">
+    <div class="app-card"><h4>Do</h4><p>Open a coding agent. Ask it to implement your product end to end in a scratch repo. Do not help.</p></div>
+    <div class="app-card frag"><h4>Write down</h4><p>Every stall, guess, and quiet wrong turn. That list is your onboarding roadmap, and it's more honest than any survey you'll run this year.</p></div>
+  </div>
+</section>
+
+<!-- 11 · THANK YOU -->
+<section class="panel" data-nav="Thank you" data-group="Close" data-notes="">
+  <div class="panel-head">
+    <p class="eyebrow">Thank you</p>
+    <h1>Find me at the bar</h1>
+    <p>Tommy Keeley · <a href="https://muckstack.com">muckstack.com</a></p>
+  </div>
+  <p class="tnote">Press ? for the key map. Sections are deep-linkable by number in the URL.</p>
+</section>
+
+    </div>
+  </main>
+</div>
+
+<div id="notes" hidden><div class="label">Speaker notes</div><div id="notes-text"></div></div>
+<div id="help" hidden>
+  <div class="card">
+    <div class="row"><kbd>→</kbd><kbd>space</kbd> next fragment or section</div>
+    <div class="row"><kbd>←</kbd> back</div>
+    <div class="row"><kbd>Enter</kbd> fire the section's interactive moment</div>
+    <div class="row"><kbd>N</kbd> speaker notes</div>
+    <div class="row"><kbd>F</kbd> fullscreen</div>
+    <div class="row"><kbd>Z</kbd> cycle projector zoom</div>
+    <div class="row"><kbd>1</kbd> … <kbd>0</kbd> jump to section</div>
+    <div class="row"><kbd>?</kbd> this help</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const slides = Array.from(document.querySelectorAll('.panel'));
+  const navlist = $('navlist'), counter = $('counter'), notes = $('notes'), notesText = $('notes-text'), help = $('help');
+  let i = 0;
+
+  // ---------- nav ----------
+  if (navlist) {
+    let group = null;
+    slides.forEach((s, n) => {
+      if (s.dataset.group !== group) { group = s.dataset.group; const g = document.createElement('div'); g.className = 'nav-group'; g.textContent = group; navlist.appendChild(g); }
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'nav-item';
+      const num = document.createElement('span'); num.className = 'n'; num.textContent = String(n + 1).padStart(2, '0');
+      const lbl = document.createElement('span'); lbl.textContent = s.dataset.nav;
+      b.append(num, lbl);
+      b.addEventListener('click', () => { show(n); b.blur(); });
+      navlist.appendChild(b);
+    });
+  }
+
+  // ---------- interactive hooks ----------
+  const hooks = {
+    journeysAgent() { const c = $('card-human'); if (c) c.classList.add('muted'); },
+    journeysReset() { const c = $('card-human'); if (c) c.classList.remove('muted'); },
+    doorsCollapse() {
+      document.querySelectorAll('#doors tbody tr').forEach(r => {
+        const chip = r.querySelector('.chip'); if (!chip) return;
+        if (r.dataset.keep) { r.classList.add('primary-row'); chip.className = 'chip success'; chip.textContent = 'Primary door'; }
+        else { r.classList.add('nodata-row'); chip.className = 'chip neutral'; chip.textContent = 'Fallback'; }
+      });
+    },
+    doorsReset() {
+      document.querySelectorAll('#doors tbody tr').forEach(r => {
+        r.classList.remove('primary-row', 'nodata-row');
+        const chip = r.querySelector('.chip'); if (chip) { chip.className = 'chip neutral'; chip.textContent = 'One of five'; }
+      });
+    },
+  };
+  const fire = name => { if (name && hooks[name]) hooks[name](); };
+  const frags = s => Array.from(s.querySelectorAll('.frag'));
+
+  function show(n, { fromEnd = false } = {}) {
+    n = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(s => s.classList.remove('active'));
+    const s = slides[n]; s.classList.add('active'); i = n;
+    frags(s).forEach(f => {
+      if (fromEnd) { f.classList.add('on'); fire(f.dataset.on); }
+      else { f.classList.remove('on'); fire(f.dataset.off); }
+    });
+    document.querySelectorAll('.nav-item').forEach((b, k) => b.classList.toggle('on', k === n));
+    if (counter) counter.textContent = 'Section ' + (n + 1) + ' of ' + slides.length;
+    if (notesText) notesText.textContent = s.dataset.notes || 'No notes for this section.';
+    history.replaceState(null, '', '#' + (n + 1));
+    window.scrollTo({ top: 0 });
+  }
+  function next() {
+    const f = frags(slides[i]).find(f => !f.classList.contains('on'));
+    if (f) { f.classList.add('on'); fire(f.dataset.on); return; }
+    if (i < slides.length - 1) show(i + 1);
+  }
+  function prev() {
+    const on = frags(slides[i]).filter(f => f.classList.contains('on'));
+    if (on.length) { const f = on[on.length - 1]; f.classList.remove('on'); fire(f.dataset.off); return; }
+    if (i > 0) show(i - 1, { fromEnd: true });
+  }
+
+  // ---------- demo (simulated, product-neutral) ----------
+  const term = $('term'), runbtn = $('runbtn');
+  const script = [
+    ['cmd', '$ agent "instrument checkout for this business"', 'find'],
+    ['dim', '  reading docs/skills/setup.md  (v3.2)'],
+    ['ok',  '  ✓ found one instruction, one skill, one verify step', 'find:done'],
+    ['cmd', '$ run skill setup@3.2', 'run'],
+    ['dim', '  auth: existing project "checkout-web" → token minted'],
+    ['dim', '  install: analytics sdk 2.x'],
+    ['dim', '  taxonomy: checkout_started, item_added, order_completed (+9)'],
+    ['ok',  '  ✓ 12 events wired, 0 guessed', 'run:done'],
+    ['cmd', '$ verify', 'verify'],
+    ['dim', '  sending synthetic order_completed  id=val_8f21c'],
+    ['ok',  '  ✓ received val_8f21c in 1.9s'],
+    ['warn','  ! item_added missing "sku" .. flagged for a human', 'verify:done'],
+    ['cmd', '$ open dashboard', 'value'],
+    ['ok',  '  ✓ Checkout funnel live with real data'],
+    ['ok',  '  → next: fix item_added.sku, then set a retention goal', 'value:done'],
+  ];
+  let running = false;
+  function setStep(name, done) {
+    const el = document.querySelector('.step[data-step="' + name + '"]'); if (!el) return;
+    const chip = el.querySelector('.chip'); if (!chip) return;
+    el.classList.toggle('live', !done);
+    chip.className = 'chip ' + (done ? 'success' : 'info'); chip.textContent = done ? 'Done' : 'Running';
+  }
+  function runDemo() {
+    if (!term || !runbtn || running) return; running = true; runbtn.disabled = true;
+    term.innerHTML = '';
+    document.querySelectorAll('.step').forEach(s => { s.classList.remove('live'); const c = s.querySelector('.chip'); if (c) { c.className = 'chip neutral'; c.textContent = 'Waiting'; } });
+    const cur = document.createElement('div'); cur.className = 'ln cursor'; term.appendChild(cur);
+    let k = 0;
+    (function tick() {
+      if (k >= script.length) { cur.remove(); running = false; runbtn.disabled = false; runbtn.textContent = 'Run again'; return; }
+      const [cls, text, tag] = script[k++];
+      const ln = document.createElement('div'); ln.className = 'ln ' + cls; ln.textContent = text;
+      term.insertBefore(ln, cur); term.scrollTop = term.scrollHeight;
+      if (tag) { const [name, st] = tag.split(':'); setStep(name, st === 'done'); }
+      setTimeout(tick, cls === 'cmd' ? 900 : 550);
+    })();
+  }
+  if (runbtn) runbtn.addEventListener('click', runDemo);
+  function interact() { if (slides[i].id === 'demo') runDemo(); else next(); }
+
+  // ---------- projector zoom (the 16px scale is for a laptop; Z cycles it for a room) ----------
+  const zooms = [1, 1.25, 1.5, 1.75]; let z = 0;
+  function applyZoom() { document.body.style.zoom = zooms[z]; }
+  try { const saved = parseFloat(localStorage.getItem('zoom')); const k = zooms.indexOf(saved); if (k >= 0) z = k; } catch (e) {}
+  applyZoom();
+
+  // ---------- keys ----------
+  addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.target && /^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+    switch (e.key) {
+      case 'ArrowRight': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'PageUp': e.preventDefault(); prev(); break;
+      case 'Enter': if (e.target && e.target.tagName === 'BUTTON') return; e.preventDefault(); interact(); break;
+      case 'n': case 'N': if (notes) notes.hidden = !notes.hidden; break;
+      case 'f': case 'F': document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); break;
+      case 'z': case 'Z': z = (z + 1) % zooms.length; applyZoom(); try { localStorage.setItem('zoom', String(zooms[z])); } catch (e2) {} break;
+      case '?': if (help) help.hidden = !help.hidden; break;
+      case 'Escape': if (help) help.hidden = true; break;
+      case 'Home': show(0); break;
+      case 'End': show(slides.length - 1); break;
+      default: if (/^[0-9]$/.test(e.key)) show(e.key === '0' ? 9 : Number(e.key) - 1);
+    }
+  });
+  if (help) help.addEventListener('click', () => help.hidden = true);
+
+  const start = parseInt(location.hash.slice(1), 10);
+  show(isNaN(start) ? 0 : start - 1);
+})();
+</script>
+</body>
+</html>
