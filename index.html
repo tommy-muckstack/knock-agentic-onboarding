@@ -101,8 +101,8 @@
 
   /* the sweep: a thin lime line crosses the screen while the slides crossfade */
   #wipe { position:fixed; top:0; bottom:0; left:0; width:3px; z-index:15; background:var(--lime); box-shadow:0 0 18px 2px var(--lime); pointer-events:none; opacity:0; will-change:transform; }
-  #wipe.in-fwd, #wipe.out-fwd   { animation:sweepFwd  .56s cubic-bezier(.6,0,.2,1) both; }
-  #wipe.in-back, #wipe.out-back { animation:sweepBack .56s cubic-bezier(.6,0,.2,1) both; }
+  #wipe.in-fwd, #wipe.out-fwd   { animation:sweepBack .56s cubic-bezier(.6,0,.2,1) both; }
+  #wipe.in-back, #wipe.out-back { animation:sweepFwd  .56s cubic-bezier(.6,0,.2,1) both; }
   @keyframes sweepFwd  { 0% { transform:translateX(-3px); opacity:.95; } 92% { opacity:.95; } 100% { transform:translateX(100vw); opacity:0; } }
   @keyframes sweepBack { 0% { transform:translateX(100vw); opacity:.95; } 92% { opacity:.95; } 100% { transform:translateX(-3px); opacity:0; } }
   /* sliding door: a clone of the outgoing slide sits on top and is clipped away as the line travels */
@@ -110,8 +110,9 @@
   #ghost.cover-mode { background:var(--cover-bg); }
   #ghost.cover-mode .content { max-width:none; padding:0; }
   #ghost .panel { animation:none !important; }
-  #ghost.door-fwd  { animation:doorFwd  .56s cubic-bezier(.6,0,.2,1) both; }
-  #ghost.door-back { animation:doorBack .56s cubic-bezier(.6,0,.2,1) both; }
+  /* page-turn: forward peels the old slide from the right edge leftward; back does the reverse */
+  #ghost.door-fwd  { animation:doorBack .56s cubic-bezier(.6,0,.2,1) both; }
+  #ghost.door-back { animation:doorFwd  .56s cubic-bezier(.6,0,.2,1) both; }
   @keyframes doorFwd  { from { clip-path:inset(0% 0% 0% 0%); } to { clip-path:inset(0% 0% 0% 100%); } }
   @keyframes doorBack { from { clip-path:inset(0% 0% 0% 0%); } to { clip-path:inset(0% 100% 0% 0%); } }
   .panel.active.none { animation:none; }
