@@ -174,6 +174,9 @@
   .cover h1 { font-size:clamp(48px, 6.4vw, 128px); font-weight:500; letter-spacing:-.02em; line-height:1.05; margin:0 0 .35em; max-width:none; color:var(--cover-fg); }
   .cover .sub { font-size:clamp(18px, 2vw, 40px); font-weight:500; margin:0; color:var(--cover-fg); }
   .cover .lime { color:var(--lime); }
+  .cover .eyebrow-lime { font-size:clamp(14px, 1.3vw, 24px); letter-spacing:.08em; text-transform:uppercase; color:var(--lime); margin:0 0 1.2em; font-weight:500; }
+  .cover .title-block.agenda { padding-bottom:3vh; }
+  .agenda-list { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.55em; font-size:clamp(20px, 2.6vw, 52px); font-weight:500; line-height:1.25; }
   .cover .credits { display:flex; align-items:center; justify-content:flex-end; gap:2.5vw; text-align:right; font-size:clamp(14px, 1.45vw, 28px); line-height:1.9; font-weight:500; }
   .cover .credits .badge { width:clamp(56px, 7vw, 140px); }
   .cover .credits .badge img { width:100%; height:auto; display:block; }
@@ -251,21 +254,22 @@
   </div>
 </section>
 
-<!-- 2 · AGENDA -->
-<section class="panel" data-nav="Agenda" data-group="Introduction" data-notes="Same funnel you already run. Different user. I'll take each step, then show one live.">
-  <div class="panel-head">
-    <p class="eyebrow">Agenda</p>
-    <h1>Same funnel. Different user.</h1>
-    <p>Five steps, one question each. Then one of them live.</p>
+<!-- 2 · AGENDA (cover format) -->
+<section class="panel cover" data-nav="Agenda" data-group="Introduction" data-notes="Same funnel you already run. Different user. Two minutes on how onboarding works today and what changes when the account is an agent, then the funnel one step at a time, then one of them live.">
+  <div class="logo"><img src="assets/knock.svg" alt="Knock"></div>
+  <div class="title-block agenda">
+    <p class="eyebrow-lime">Agenda</p>
+    <ol class="agenda-list">
+      <li class="frag"><span class="lime">Traditional</span> Onboarding</li>
+      <li class="frag"><span class="lime">Agentic</span> Onboarding Overview</li>
+      <li class="frag"><span class="lime">Find</span> .. how does an agent find you?</li>
+      <li class="frag"><span class="lime">Pick</span> .. why would it choose you?</li>
+      <li class="frag"><span class="lime">Sign up</span> .. can it get in without a human?</li>
+      <li class="frag"><span class="lime">Activate</span> .. what is an aha for an agent?</li>
+      <li class="frag"><span class="lime">Measure</span> .. what do you count?</li>
+    </ol>
   </div>
-  <div class="app-grid">
-    <div class="app-card frag"><h4>1 · Find</h4><p>How does an agent find you?</p></div>
-    <div class="app-card frag"><h4>2 · Pick</h4><p>Why would it choose you?</p></div>
-    <div class="app-card frag"><h4>3 · Sign up</h4><p>Can it get in without a human?</p></div>
-    <div class="app-card frag"><h4>4 · Activate</h4><p>What is an aha for an agent?</p></div>
-    <div class="app-card frag"><h4>5 · Measure</h4><p>What do you count?</p></div>
-  </div>
-  <p class="tnote">Numbered because it is the order a new account moves through, nothing else.</p>
+  <div class="credits"><div>Tommy Keeley<br>Head of Growth at Amplitude<br>Sept 15, 2026</div><div class="badge"><img src="assets/amplitude.png" alt="Amplitude"></div></div>
 </section>
 
 <!-- 3 · TWO JOURNEYS -->
