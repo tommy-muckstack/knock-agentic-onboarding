@@ -142,6 +142,12 @@
   .mode-toggle .btn { border:0; border-radius:0; height:34px; padding:0 18px; font-size:14px; }
   .mode-toggle .btn + .btn { border-left:1px solid var(--g40); }
   .mode-toggle .btn.on { background:var(--chip-bg); color:var(--chip-text); }
+  /* text swap: old text drops away, new text rises in, cascading left to right */
+  .sw { transition:opacity .18s cubic-bezier(.2,.7,.2,1), transform .18s cubic-bezier(.2,.7,.2,1); }
+  .sw.out { opacity:0; transform:translateY(-8px); }
+  .sw.in { opacity:0; transform:translateY(8px); transition:none; }
+  .gf-stage.pulse { animation:pulse .5s cubic-bezier(.2,.7,.2,1); }
+  @keyframes pulse { 0% { border-color:var(--g30); } 35% { border-color:var(--lilac); box-shadow:0 0 0 4px var(--info-bg); } 100% { border-color:var(--g30); } }
   @media (max-width:820px) { .panel-head.has-toggle { padding-right:0; } .mode-toggle { position:static; margin-top:12px; } }
   .panel-head p + p { margin-top:8px; }
   .panel-head p b { color:var(--violet); }
@@ -168,9 +174,11 @@
   .gf-lines { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; }
   .gf-lines path { fill:none; stroke:var(--lilac); stroke-width:2; opacity:.7; }
   .gf-sources { display:flex; flex-direction:column; gap:8px; justify-content:center; padding:8px 0; }
+  .gf-sources .pill { width:100%; overflow:hidden; text-overflow:ellipsis; }
+  .gf-stage > p { min-height:6.2em; }
   .gf-sources .gf-label { margin-bottom:2px; }
   .pill { display:inline-flex; align-items:center; justify-content:center; height:30px; padding:0 12px; border-radius:999px; background:var(--chip-bg); border:1px solid var(--chip-border); color:var(--chip-text); font-size:14px; font-weight:var(--fw-strong); white-space:nowrap; }
-  .pill.big { height:36px; padding:0 16px; font-size:16px; }
+  .pill.big { height:36px; padding:0 16px; font-size:16px; min-width:110px; }
   .pills { display:flex; flex-direction:column; align-items:flex-start; gap:4px; margin-top:4px; }
   .pills .sep { color:var(--g60); font-size:16px; line-height:1; padding-left:14px; }
   .gf-stage { position:relative; background:var(--white); border:1px solid var(--g30); border-radius:12px; padding:20px 20px 18px; display:flex; flex-direction:column; gap:10px; min-height:300px; }
@@ -372,36 +380,53 @@
 <section class="panel" id="journeys" data-nav="Onboarding 101" data-group="Introduction" data-notes="Before the turn, the growth funnel you already run, with a person on the other side. Acquisition: where they come from. Paid gives you speed and stops when you stop spending. Organic compounds. Referral and word of mouth are the ones you under-attribute. Activation is not one moment, it is a chain: setup, aha, habit. Then engagement, then monetization: gate, meter, bill. Now flip the toggle. Same funnel. The sources change: docs, READMEs, registries, training data. The agent does not browse, it reads. Activation is still a chain, but there is no aha. It finishes or it leaves, so the chain is setup, verify, first value. And every metric gets a twin with no old-world counterpart.">
   <div class="panel-head has-toggle">
     <p class="eyebrow">Onboarding 101</p>
-    <h1 data-h="The growth funnel, end to end, for a human" data-a="The growth funnel, end to end, for an agent">The growth funnel, end to end, for a human</h1>
-    <p class="wide" id="gf-intro"></p>
+    <h1 class="sw" data-h="The growth funnel, end to end, for a human" data-a="The growth funnel, end to end, for an agent">The growth funnel, end to end, for a human</h1>
+    <p class="wide sw" id="gf-intro"></p>
     <div class="mode-toggle" role="group" aria-label="Show the funnel for">
       <button class="btn on" type="button" data-mode="h">Human</button>
       <button class="btn" type="button" data-mode="a">Agent</button>
     </div>
   </div>
 
-  <div class="gf" data-mode="h">
+  <div class="gf" id="gf">
     <svg class="gf-lines" aria-hidden="true"></svg>
     <div class="gf-sources">
       <div class="gf-label">Sources</div>
-      <span class="pill">SEO</span><span class="pill">SEM</span><span class="pill">Paid social</span><span class="pill">Content</span><span class="pill">Word of mouth</span><span class="pill">Referral</span><span class="pill">Partnerships</span><span class="pill">Community</span><span class="pill">Direct</span>
+      <span class="pill sw" data-h="SEO" data-a="Docs">SEO</span>
+      <span class="pill sw" data-h="SEM" data-a="README">SEM</span>
+      <span class="pill sw" data-h="Paid social" data-a="Skills">Paid social</span>
+      <span class="pill sw" data-h="Content" data-a="MCP registries">Content</span>
+      <span class="pill sw" data-h="Word of mouth" data-a="Package managers">Word of mouth</span>
+      <span class="pill sw" data-h="Referral" data-a="Public repos">Referral</span>
+      <span class="pill sw" data-h="Partnerships" data-a="Community answers">Partnerships</span>
+      <span class="pill sw" data-h="Community" data-a="Citations">Community</span>
+      <span class="pill sw" data-h="Direct" data-a="Training data">Direct</span>
     </div>
-    <div class="gf-stage gf-acq"><div class="k">1</div><h4>Acquisition</h4><p>Where they come from. Some channels bring intent, some bring volume.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Signups</span></div></div>
-    <div class="gf-stage"><div class="k">2</div><h4>Activation</h4><p>Not a moment. A chain, and the chain predicts retention.</p><div class="pills"><span class="pill big">Setup</span><span class="sep">↓</span><span class="pill big">Aha</span><span class="sep">↓</span><span class="pill big">Habit</span></div><div class="metric"><span class="ml">Metric</span><span class="mv">7-day aha rate</span></div></div>
-    <div class="gf-stage"><div class="k">3</div><h4>Engagement</h4><p>Breadth and depth of use once the habit exists.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Weekly Active Users</span></div></div>
-    <div class="gf-stage"><div class="k">4</div><h4>Monetization</h4><p>Where the value exchange becomes money. Gate, meter, bill.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Trial starts → ARR</span></div></div>
-  </div>
-
-  <div class="gf" data-mode="a" hidden>
-    <svg class="gf-lines" aria-hidden="true"></svg>
-    <div class="gf-sources">
-      <div class="gf-label">Sources</div>
-      <span class="pill">Docs</span><span class="pill">README</span><span class="pill">Skills</span><span class="pill">MCP registries</span><span class="pill">Package managers</span><span class="pill">Public repos</span><span class="pill">Community answers</span><span class="pill">Citations</span><span class="pill">Training data</span>
+    <div class="gf-stage gf-acq">
+      <div class="k">1</div><h4>Acquisition</h4>
+      <p class="sw" data-h="Where they come from. Some channels bring intent, some bring volume." data-a="Where it finds you. It doesn't browse, it reads: the official path, or nothing.">Where they come from. Some channels bring intent, some bring volume.</p>
+      <div class="metric"><span class="ml">Metric</span><span class="mv sw" data-h="Signups" data-a="Hands-off signups">Signups</span></div>
     </div>
-    <div class="gf-stage gf-acq"><div class="k">1</div><h4>Acquisition</h4><p>Where it finds you. It doesn't browse, it reads: the official path, or nothing.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Hands-off signups</span></div></div>
-    <div class="gf-stage"><div class="k">2</div><h4>Activation</h4><p>Still a chain. No aha: it finishes or it leaves, so verification is the middle step.</p><div class="pills"><span class="pill big">Setup</span><span class="sep">↓</span><span class="pill big">Verify</span><span class="sep">↓</span><span class="pill big">First value</span></div><div class="metric"><span class="ml">Metric</span><span class="mv">Verified completion rate</span></div></div>
-    <div class="gf-stage"><div class="k">3</div><h4>Engagement</h4><p>Runs on a trigger or a schedule. Breadth is how many tasks it can finish without a human.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Tasks completed, no human</span></div></div>
-    <div class="gf-stage"><div class="k">4</div><h4>Monetization</h4><p>Gate, meter, bill still apply. The meter moves from seats to actions.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Usage revenue per agent</span></div></div>
+    <div class="gf-stage">
+      <div class="k">2</div><h4>Activation</h4>
+      <p class="sw" data-h="Not a moment. A chain, and the chain predicts retention." data-a="Still a chain. No aha: it finishes or it leaves, so verification is the middle step.">Not a moment. A chain, and the chain predicts retention.</p>
+      <div class="pills">
+        <span class="pill big sw" data-h="Setup" data-a="Setup">Setup</span><span class="sep">↓</span>
+        <span class="pill big sw" data-h="Aha" data-a="Verify">Aha</span><span class="sep">↓</span>
+        <span class="pill big sw" data-h="Habit" data-a="First value">Habit</span>
+      </div>
+      <div class="metric"><span class="ml">Metric</span><span class="mv sw" data-h="7-day aha rate" data-a="Verified completions">7-day aha rate</span></div>
+    </div>
+    <div class="gf-stage">
+      <div class="k">3</div><h4>Engagement</h4>
+      <p class="sw" data-h="Breadth and depth of use once the habit exists." data-a="Runs on a trigger or a schedule. Breadth is how many tasks it can finish without a human.">Breadth and depth of use once the habit exists.</p>
+      <div class="metric"><span class="ml">Metric</span><span class="mv sw" data-h="Weekly Active Users" data-a="Autonomous tasks">Weekly Active Users</span></div>
+    </div>
+    <div class="gf-stage">
+      <div class="k">4</div><h4>Monetization</h4>
+      <p class="sw" data-h="Where the value exchange becomes money. Gate, meter, bill." data-a="Gate, meter, bill still apply. The meter moves from seats to actions.">Where the value exchange becomes money. Gate, meter, bill.</p>
+      <div class="metric"><span class="ml">Metric</span><span class="mv sw" data-h="Trial starts → ARR" data-a="Usage revenue">Trial starts → ARR</span></div>
+    </div>
   </div>
 </section>
 
@@ -801,17 +826,36 @@
     h: 'Historically, you move a human through this funnel with human reasons: <b>confidence, comprehension, motivation, permission.</b>',
     a: 'An agent moves through the same funnel with machine reasons: <b>discoverability, explicit instructions, deterministic tools, verification.</b>'
   };
-  function setMode(mode) {
-    const sec = $('journeys'); if (!sec) return;
-    sec.querySelectorAll('.gf').forEach(g => g.hidden = g.dataset.mode !== mode);
-    sec.querySelectorAll('.mode-toggle .btn').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
-    const h = sec.querySelector('h1'); if (h) h.textContent = h.dataset[mode];
-    const intro = $('gf-intro'); if (intro) intro.innerHTML = INTRO[mode];
+  let modeT = [];
+  function setMode(mode, animate = true) {
+    const sec = $('journeys'); if (!sec || sec.dataset.mode === mode) return;
     sec.dataset.mode = mode;
-    fitSlide();
+    sec.querySelectorAll('.mode-toggle .btn').forEach(b => b.classList.toggle('on', b.dataset.mode === mode));
+    modeT.forEach(clearTimeout); modeT = [];
+    const els = Array.from(sec.querySelectorAll('.sw'));
+    const box = sec.getBoundingClientRect();
+    const swap = el => { if (el.id === 'gf-intro') el.innerHTML = INTRO[mode]; else el.textContent = el.dataset[mode]; };
+    if (!animate || reduced) { els.forEach(swap); drawFunnel(); return; }
+    els.forEach(el => {
+      const r = el.getBoundingClientRect();
+      const delay = Math.round(((r.left - box.left) / Math.max(1, box.width)) * 260 + ((r.top - box.top) / Math.max(1, box.height)) * 60);
+      modeT.push(setTimeout(() => {
+        el.classList.add('out');
+        modeT.push(setTimeout(() => {
+          swap(el); el.classList.remove('out'); el.classList.add('in');
+          void el.offsetWidth; el.classList.remove('in');
+          drawFunnel();
+        }, 180));
+      }, delay));
+    });
+    sec.querySelectorAll('.gf-stage').forEach((st, k) => { st.classList.remove('pulse'); void st.offsetWidth; modeT.push(setTimeout(() => st.classList.add('pulse'), 80 + k * 70)); });
+    modeT.push(setTimeout(() => { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; }, 700));
   }
-  document.querySelectorAll('.mode-toggle .btn').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); setMode(b.dataset.mode); b.blur(); }));
-  setMode('h');
+  document.querySelectorAll('.mode-toggle .btn').forEach(b => {
+    b.addEventListener('mousedown', e => e.preventDefault());   // no focus scroll
+    b.addEventListener('click', e => { e.stopPropagation(); setMode(b.dataset.mode); });
+  });
+  (function(){ const sec = $('journeys'); if (sec) { sec.dataset.mode = ''; setMode('h', false); } })();
 
   // nav drawer: hover the top-left corner (or the menu tab) to fly out, leave to collapse
   const nav = document.querySelector('nav'), navHot = $('nav-hot'), navTab = $('nav-tab');
