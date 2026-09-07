@@ -155,7 +155,7 @@
   body.cover-mode nav, body.cover-mode .topbar { display:none; }
   body.cover-mode .content { max-width:none; padding:0; }
   .cover { position:relative; min-height:100vh; background:var(--cover-bg); color:var(--cover-fg); padding:4vw 6.5vw; display:flex; flex-direction:column; }
-  .cover .logo { height:6vw; min-height:56px; max-height:110px; width:auto; }
+  .cover .logo { height:4.2vw; min-height:40px; max-height:80px; width:auto; }
   .cover .logo img, .cover .logo svg { height:100%; width:auto; display:block; }
   .cover .title-block { margin:auto 0; padding-bottom:6vh; }
   .cover h1 { font-size:clamp(48px, 6.4vw, 128px); font-weight:500; letter-spacing:-.02em; line-height:1.05; margin:0 0 .35em; max-width:none; color:var(--cover-fg); }
@@ -207,10 +207,7 @@
 
 <!-- 1 · TITLE (cover) -->
 <section class="panel cover" data-nav="Title" data-group="Open" data-notes="Two weeks ago I told an agent I needed an oil change. It found my mechanic from old receipts, picked them, booked the slot, and put the invite on my calendar and my wife's. Nobody at that shop did anything to earn that booking. That is an acquisition funnel with no human in it. Tonight, put your product on the other side of that funnel.">
-  <div class="logo" aria-label="Knock">
-    <!-- Drop the real mark at assets/knock.svg and swap this inline stand-in for <img src="assets/knock.svg" alt="Knock"> -->
-    <svg viewBox="0 0 64 88" role="img" aria-hidden="true"><path fill="var(--cover-fg)" d="M4 6h14v44l22-24h18L34 52l26 30H42L18 56v26H4z"/><circle cx="52" cy="14" r="9" fill="var(--coral)"/></svg>
-  </div>
+  <div class="logo"><img src="assets/knock.svg" alt="Knock"></div>
   <div class="title-block">
     <h1><span class="lime">Agentic</span> Onboarding</h1>
     <p class="sub">What changes when your new users are.. <span class="lime">agents</span></p>
