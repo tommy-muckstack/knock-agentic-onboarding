@@ -390,8 +390,8 @@
     <h1 class="agenda-title">Agenda</h1>
     <ol class="agenda-list" id="agenda">
       <li><span class="num">1</span><span class="item"><span class="lime">Onboarding 101</span></span></li>
-      <li><span class="num">2</span><span class="item"><span class="lime">Acquisition</span><span class="desc">.. agentic signup</span></span></li>
-      <li><span class="num">3</span><span class="item"><span class="lime">Activation</span><span class="desc">.. agentic aha</span></span></li>
+      <li><span class="num">2</span><span class="item"><span class="lime">Acquisition</span><span class="desc">.. find › pick › sign up</span></span></li>
+      <li><span class="num">3</span><span class="item"><span class="lime">Activation</span><span class="desc">.. setup › aha › habit</span></span></li>
       <li><span class="num">4</span><span class="item"><span class="lime">Demo</span><span class="desc">.. an agent runs the funnel</span></span></li>
       <li><span class="num">5</span><span class="item"><span class="lime">Measurement</span><span class="desc">.. what means success</span></span></li>
     </ol>
@@ -453,9 +453,9 @@
 </section>
 
 <!-- 4 · AGENTIC ACQUISITION -->
-<section class="panel" id="find" data-nav="Agentic Acquisition" data-group="The funnel" data-sub="Acquisition" data-notes="Discovery moved. Search is being joined by answer engines and agents reading your docs, your package README, your skills, marketplaces, public repos, community answers, third-party citations. Those decide whether an agent recommends you or can even use you. We have humans on keyboards seeding Reddit every week, not for people, for the training data. If your marketing site is beautiful and your docs are a maze, you are invisible to the reader that matters now.">
+<section class="panel" id="find" data-nav="Find" data-group="The funnel" data-sub="Acquisition" data-notes="Discovery moved. Search is being joined by answer engines and agents reading your docs, your package README, your skills, marketplaces, public repos, community answers, third-party citations. Those decide whether an agent recommends you or can even use you. We have humans on keyboards seeding Reddit every week, not for people, for the training data. If your marketing site is beautiful and your docs are a maze, you are invisible to the reader that matters now.">
   <div class="panel-head">
-    <p class="eyebrow">Agentic Acquisition</p>
+    <p class="eyebrow">Acquisition · Find</p>
     <h1>Your docs are your homepage now</h1>
     <p>The question used to be "can a person find our website?" Now it's <b>"can an agent find the official path, understand it, and execute it correctly?"</b></p>
   </div>
@@ -501,7 +501,7 @@
 <!-- 5 · PICK -->
 <section class="panel" data-nav="Pick" data-group="The funnel" data-notes="A legacy story in the training data is enterprise, heavy, long implementation. So when an agent compares tools it reaches for the lighter one. That's not a positioning problem you fix with a homepage refresh. It's a corpus problem. The novel part for a marketing room: your share of voice metric now has a twin, agent pick rate, and the levers are docs, READMEs, community answers and build-in-public posts, not ad spend. Nobody has published theirs yet. Be first.">
   <div class="panel-head">
-    <p class="eyebrow">Step 2 of 5 · Pick</p>
+    <p class="eyebrow">Acquisition · Pick</p>
     <h1>Agents choose from what they've already read</h1>
     <p>An agent picks from training data that is six to eighteen months old. <b>Whatever the internet said about you last year is what gets you picked this year.</b></p>
   </div>
@@ -518,7 +518,7 @@
 <!-- 6 · SIGN UP -->
 <section class="panel" id="signup" data-nav="Sign up" data-group="The funnel" data-notes="Most setup experiences are a menu of competing routes when the customer wants one recommendation. A human can triangulate. An agent has to guess, and every judgment call you left implicit is a place it guesses wrong. So: one primary door, agent instruction. A side door, repo connection. A quiet fallback, the manual snippet. Different doors, same setup logic, same verification. And use deterministic tools for the parts where guessing is dangerous: authentication, credentials, project selection, package install. Let the agent reason about the business, not about your OAuth flow.">
   <div class="panel-head">
-    <p class="eyebrow">Step 3 of 5 · Sign up</p>
+    <p class="eyebrow">Acquisition · Sign up</p>
     <h1>One path, not a menu</h1>
     <p>Most setup is a menu of competing routes when the customer wants one recommendation. A human triangulates. <b>An agent guesses, and every implicit judgment call is a place it guesses wrong.</b></p>
   </div>
@@ -541,29 +541,58 @@
   </div>
 </section>
 
-<!-- 7 · ACTIVATE -->
-<section class="panel" data-nav="Activate" data-group="The funnel" data-sub="Activation" data-notes="Humans need trust and a moment. Agents need a path with no dead ends. If the first task fails it moves to the next product and never tells you. So the bar isn't fewer clicks. It's less human work. And validation is the piece everyone skips: an agent that instruments forty events and silently gets twelve wrong has created a mess you find in a QBR three months later. The skill has to check its own work and report what it couldn't verify. Installed is not the finish line.">
+<!-- 7a · ACTIVATION · SETUP -->
+<section class="panel" data-nav="Setup" data-group="The funnel" data-sub="Activation" data-notes="Setup means the system works. For a human that is a wizard and a checklist. For an agent it is one instruction it can follow and deterministic tools for the parts where guessing is dangerous: authentication, credentials, project selection, package install. The bar is not fewer clicks. It is less human work. If the first task fails, the agent moves to the next product and never tells you.">
   <div class="panel-head">
-    <p class="eyebrow">Step 4 of 5 · Activate</p>
-    <h1>Agents don't get an aha. They finish or they leave.</h1>
-    <p>Setup means the system works. Activation means someone got value. <b>For an agent that is a trusted outcome with an obvious next action.</b></p>
+    <p class="eyebrow">Activation · Setup</p>
+    <h1>Setup means the system works</h1>
+    <p>A human gets a wizard and a checklist. <b>An agent gets one instruction and tools it cannot guess wrong with.</b></p>
   </div>
   <div class="table-scroll">
     <table class="dtable">
-      <thead><tr><th>Step</th><th>What happens</th><th>Who does the work</th><th>Checked</th></tr></thead>
+      <thead><tr><th>Step</th><th>What happens</th><th>Who does the work</th></tr></thead>
       <tbody>
-        <tr class=""><td class="num">1</td><td>State intent: "instrument checkout for this business"</td><td>Human, one sentence</td><td><span class="chip neutral">n/a</span></td></tr>
-        <tr class=""><td class="num">2</td><td>Agent configures: taxonomy, events, install</td><td>Agent</td><td><span class="chip warn">Not yet</span></td></tr>
-        <tr class=""><td class="num">3</td><td>Verify: synthetic signal, validation ID, confirm receipt</td><td>Agent, against the product</td><td><span class="chip success">Verified</span></td></tr>
-        <tr class="primary-row"><td class="num">4</td><td>First value: a dashboard with real data, and the next action named</td><td>Human reads, agent proposes</td><td><span class="chip success">Activated</span></td></tr>
+        <tr><td class="num">1</td><td>State intent: "instrument checkout for this business"</td><td>Human, one sentence</td></tr>
+        <tr><td class="num">2</td><td>Find the instruction: one stable path, a versioned skill</td><td>Agent</td></tr>
+        <tr><td class="num">3</td><td>Run deterministic tools: auth, credentials, project, install</td><td>Agent, no guessing</td></tr>
+        <tr class="primary-row"><td class="num">4</td><td>Configure: taxonomy, events, first send</td><td>Agent</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="tnote">The bar is not fewer clicks. It is less human work. Step 3 is the one everyone skips: forty events instrumented, twelve silently wrong, found in a review three months later.</p>
+  <p class="tnote">The bar is not fewer clicks. It is less human work. If the first task fails, the agent moves to the next product and never tells you.</p>
+</section>
+
+<!-- 7b · ACTIVATION · AHA -->
+<section class="panel" data-nav="Aha" data-group="The funnel" data-sub="Activation" data-notes="Humans need trust and a moment. Agents need a path with no dead ends. There is no aha for an agent. It finishes or it leaves. So the middle of the chain is verification: send a synthetic signal, get a validation ID back, confirm receipt. An agent that instruments forty events and silently gets twelve wrong has created a mess you find in a review three months later. The skill has to check its own work and report what it could not verify. Installed is not the finish line. First value is a dashboard with real data and the next action named.">
+  <div class="panel-head">
+    <p class="eyebrow">Activation · Aha</p>
+    <h1>Agents don't get an aha. They finish or they leave.</h1>
+    <p>The human aha is a feeling. <b>The agent version is a verified outcome with the next action named.</b></p>
+  </div>
+  <div class="app-grid">
+    <div class="app-card"><h4>Verify</h4><p>Send a synthetic signal. Get a validation ID back. Confirm receipt. The skill checks its own work and reports what it could not verify.</p></div>
+    <div class="app-card"><h4>First value</h4><p>A dashboard with real data in it, and the next action named. Installed is not the finish line.</p></div>
+  </div>
+  <p class="tnote">Verification is the step everyone skips: forty events instrumented, twelve silently wrong, found in a review three months later.</p>
+</section>
+
+<!-- 7c · ACTIVATION · HABIT -->
+<section class="panel" data-nav="Habit" data-group="The funnel" data-sub="Activation" data-notes="Habit for a human is coming back on a cadence because the product is part of their week. An agent does not have a week. It comes back when something calls it: a schedule, a webhook, a new task from a human. So habit for an agent is a trigger you designed, not a feeling you earned. The measure is how many tasks it finishes without a human in the loop, and how often that happens.">
+  <div class="panel-head">
+    <p class="eyebrow">Activation · Habit</p>
+    <h1>Habit is a trigger, not a feeling</h1>
+    <p>A human comes back because the product is part of their week. <b>An agent comes back because something called it.</b></p>
+  </div>
+  <div class="app-grid">
+    <div class="app-card"><h4>Schedule</h4><p>A recurring job: the weekly report, the nightly sync, the Monday audit.</p></div>
+    <div class="app-card"><h4>Trigger</h4><p>A webhook or an event: a new deploy, a new customer, a threshold crossed.</p></div>
+    <div class="app-card"><h4>Handoff</h4><p>A human asks for the next thing, and the agent already has the setup and the credentials.</p></div>
+  </div>
+  <p class="tnote">The habit metric gets a twin too: tasks completed without a human, and how often. Design the trigger, or there is no habit.</p>
 </section>
 
 <!-- 8 · DEMO -->
-<section class="panel" id="demo" data-nav="Live demo" data-group="The funnel" data-notes="Two minutes. One claim: what used to take a data team, a busy engineer, and three rounds with solutions architects now happens in a session. Narrate what it is doing at each funnel step: find the instruction, run it, verify with a validation ID, land on first value. Be honest on stage: messy legacy codebases still need people. The interesting part is where the work moved.">
+<section class="panel" id="demo" data-nav="Live demo" data-group="Demo" data-notes="Two minutes. One claim: what used to take a data team, a busy engineer, and three rounds with solutions architects now happens in a session. Narrate what it is doing at each funnel step: find the instruction, run it, verify with a validation ID, land on first value. Be honest on stage: messy legacy codebases still need people. The interesting part is where the work moved.">
   <div class="panel-head">
     <p class="eyebrow">Live</p>
     <h1>A quarter of setup in one session</h1>
@@ -588,7 +617,7 @@
 <!-- 9 · MEASURE -->
 <section class="panel" data-nav="Measure" data-group="Measurement" data-notes="One caution, in my own words: setup completion is not activation, and a first signal is not value. Compare retention of setup completers to non-completers before you claim anything. The two I'd start with are the ones with no old-world counterpart: hands-off completion rate and conversion by instruction version. When an agent reads your docs to install you, your instruction file is the onboarding flow, and you can version it and test it like one.">
   <div class="panel-head">
-    <p class="eyebrow">Step 5 of 5 · Measure</p>
+    <p class="eyebrow">Measurement</p>
     <h1>Same funnel, new numbers</h1>
     <p>The old metric is already in your dashboard. <b>The new one has no old-world twin.</b></p>
   </div>
