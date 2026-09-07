@@ -98,28 +98,23 @@
   .panel.active { display:block; }
   .panel.cover.active { display:flex; }
 
-  /* the wipe: a skewed lime sheet sweeps across; the slide swaps behind it */
-  #wipe { position:fixed; top:-10vh; bottom:-10vh; left:-30vw; right:-30vw; z-index:15; background:var(--lime); transform:translateX(130%) skewX(-10deg); pointer-events:none; will-change:transform; }
-  #wipe::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg, transparent 0 34%, var(--cover-bg) 34% 36%, transparent 36%); opacity:.9; }
-  #wipe.in-fwd   { animation:wipeInFwd   .32s cubic-bezier(.7,0,.3,1) forwards; }
-  #wipe.out-fwd  { animation:wipeOutFwd  .36s cubic-bezier(.7,0,.3,1) forwards; }
-  #wipe.in-back  { animation:wipeInBack  .32s cubic-bezier(.7,0,.3,1) forwards; }
-  #wipe.out-back { animation:wipeOutBack .36s cubic-bezier(.7,0,.3,1) forwards; }
-  @keyframes wipeInFwd   { from { transform:translateX(130%) skewX(-10deg); }  to { transform:translateX(0) skewX(-10deg); } }
-  @keyframes wipeOutFwd  { from { transform:translateX(0) skewX(-10deg); }     to { transform:translateX(-130%) skewX(-10deg); } }
-  @keyframes wipeInBack  { from { transform:translateX(-130%) skewX(10deg); }  to { transform:translateX(0) skewX(10deg); } }
-  @keyframes wipeOutBack { from { transform:translateX(0) skewX(10deg); }      to { transform:translateX(130%) skewX(10deg); } }
-
+  /* the sweep: a thin lime line crosses the screen while the slides crossfade */
+  #wipe { position:fixed; top:0; bottom:0; left:0; width:3px; z-index:15; background:var(--lime); box-shadow:0 0 18px 2px var(--lime); pointer-events:none; opacity:0; will-change:transform; }
+  #wipe.in-fwd, #wipe.out-fwd   { animation:sweepFwd  .56s cubic-bezier(.6,0,.2,1) both; }
+  #wipe.in-back, #wipe.out-back { animation:sweepBack .56s cubic-bezier(.6,0,.2,1) both; }
+  @keyframes sweepFwd  { 0% { transform:translateX(-10px); opacity:0; } 12% { opacity:.9; } 88% { opacity:.9; } 100% { transform:translateX(100vw); opacity:0; } }
+  @keyframes sweepBack { 0% { transform:translateX(100vw); opacity:0; } 12% { opacity:.9; } 88% { opacity:.9; } 100% { transform:translateX(-10px); opacity:0; } }
+  .panel.fading { opacity:0; transition:opacity .18s ease; }
   /* the new slide's blocks rise in with a stagger as the wipe clears */
-  .panel.active.stagger > *:not(.frag) { animation:rise .5s cubic-bezier(.2,.7,.2,1) both; }
-  .panel.active.stagger > *:nth-child(1) { animation-delay:.05s; }
-  .panel.active.stagger > *:nth-child(2) { animation-delay:.12s; }
-  .panel.active.stagger > *:nth-child(3) { animation-delay:.19s; }
-  .panel.active.stagger > *:nth-child(4) { animation-delay:.26s; }
-  .panel.active.stagger > *:nth-child(5) { animation-delay:.33s; }
-  .panel.active.stagger > *:nth-child(n+6) { animation-delay:.4s; }
-  @keyframes rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
-  .panel.cover.active.stagger > * { animation-duration:.6s; }
+  .panel.active.stagger > *:not(.frag) { animation:rise .38s cubic-bezier(.2,.7,.2,1) both; }
+  .panel.active.stagger > *:nth-child(1) { animation-delay:.03s; }
+  .panel.active.stagger > *:nth-child(2) { animation-delay:.07s; }
+  .panel.active.stagger > *:nth-child(3) { animation-delay:.11s; }
+  .panel.active.stagger > *:nth-child(4) { animation-delay:.15s; }
+  .panel.active.stagger > *:nth-child(5) { animation-delay:.19s; }
+  .panel.active.stagger > *:nth-child(n+6) { animation-delay:.22s; }
+  @keyframes rise { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+  .panel.cover.active.stagger > * { animation-duration:.45s; }
   .panel.active.plain { animation:fade .26s cubic-bezier(.2,.7,.2,1); }
   @keyframes fade { from { opacity:0; } to { opacity:1; } }
   .panel-head { border-bottom:1px solid var(--g30); padding-bottom:20px; margin-bottom:28px; }
@@ -635,7 +630,7 @@
   let wiping = false;
   function applySlide(n, fromEnd, fromHistory, mode) {
     const s = slides[n];
-    slides.forEach(x => x.classList.remove('active', 'stagger', 'plain', 'leaving', 'enter-fwd', 'enter-back', 'leave-fwd', 'leave-back'));
+    slides.forEach(x => x.classList.remove('active', 'stagger', 'plain', 'fading'));
     void s.offsetWidth;
     s.classList.add('active', mode); i = n;
     frags(s).forEach(f => {
@@ -659,12 +654,14 @@
     if (wiping) return;
     wiping = true;
     const dir = n > i ? 'fwd' : 'back';
+    const from = slides[i];
     wipe.className = 'in-' + dir;
-    wipe.addEventListener('animationend', function onIn() {
+    from.classList.add('fading');
+    setTimeout(() => {
+      from.classList.remove('fading');
       applySlide(n, fromEnd, fromHistory, 'stagger');
-      wipe.className = 'out-' + dir;
-      wipe.addEventListener('animationend', function onOut() { wipe.className = ''; wiping = false; }, { once: true });
-    }, { once: true });
+    }, 180);
+    wipe.addEventListener('animationend', function onDone() { wipe.className = ''; wiping = false; }, { once: true });
   }
   function next() {
     const f = frags(slides[i]).find(f => !f.classList.contains('on'));
