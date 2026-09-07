@@ -224,8 +224,12 @@
   .btn.on, .btn-sm.on { background:var(--chip-bg); border-color:var(--chip-border); color:var(--chip-text); }
   .btn[disabled] { color:var(--g60); cursor:default; border-color:var(--g30); }
 
-  .two-up { display:grid; grid-template-columns:1.05fr 1fr; gap:24px; align-items:start; margin-top:4px; }
+  .two-up { display:grid; grid-template-columns:1.05fr 1fr; gap:24px; align-items:stretch; margin-top:4px; }
   .two-up h2 { margin-top:0; }
+  .two-up > .mock { display:flex; flex-direction:column; }
+  .two-up > .mock .mock-body { flex:1; }
+  .two-up > div:not(.mock) { display:flex; flex-direction:column; }
+  .two-up > div:not(.mock) .callout { margin-top:auto; margin-bottom:0; }
   @media (max-width:900px) { .two-up { grid-template-columns:1fr; } }
   .mock.dark { background:var(--cover-bg); border-color:var(--g80); }
   .mock-refresh { margin-left:auto; width:26px; height:26px; border-radius:var(--btn-radius); border:1px solid transparent; background:transparent; color:var(--g50); display:inline-flex; align-items:center; justify-content:center; cursor:pointer; opacity:0; transition:opacity var(--ease), color var(--ease), border-color var(--ease); }
