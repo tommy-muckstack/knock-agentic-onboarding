@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Your New User Is an Agent</title>
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
 <link rel="apple-touch-icon" href="assets/favicon-180.png">
@@ -167,7 +167,7 @@
   /* ============ Cover (title section, full-bleed) ============ */
   body.cover-mode nav, body.cover-mode .topbar { display:none; }
   body.cover-mode .content { max-width:none; padding:0; }
-  .cover { cursor:pointer; position:relative; min-height:100vh; background:var(--cover-bg); color:var(--cover-fg); padding:4vw 6.5vw; display:flex; flex-direction:column; }
+  .cover { cursor:pointer; position:relative; min-height:100vh; min-height:100dvh; background:var(--cover-bg); color:var(--cover-fg); padding:4vw 6.5vw; flex-direction:column; }
   .cover .logo { height:4.2vw; min-height:40px; max-height:80px; width:auto; }
   .cover .logo img, .cover .logo svg { height:100%; width:auto; display:block; }
   .cover .title-block { margin:auto 0; padding-bottom:6vh; }
@@ -182,7 +182,7 @@
   .cover .credits .badge img { width:100%; height:auto; display:block; }
 
   /* ============ Hover arrows (appear on mouse move, fade when idle) ============ */
-  #arrows { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:8; display:flex; gap:10px; opacity:0; pointer-events:none; transition:opacity var(--ease); }
+  #arrows { position:fixed; left:50%; bottom:calc(22px + env(safe-area-inset-bottom)); transform:translateX(-50%); z-index:8; display:flex; gap:10px; opacity:0; pointer-events:none; transition:opacity var(--ease); }
   #arrows.show { opacity:1; pointer-events:auto; }
   .arrow { width:44px; height:44px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; padding:0; background:var(--white); color:var(--text-primary); border:1px solid var(--g40); cursor:pointer; box-shadow:0 2px 10px var(--shadow); transition:border-color var(--ease), color var(--ease); }
   .arrow .icon { font-size:24px; }
@@ -213,9 +213,26 @@
   @media (max-width:900px) { .demo-grid { grid-template-columns:1fr; } }
   @media (max-width:820px) {
     .shell { flex-direction:column; }
-    nav { width:auto; flex:none; height:auto; position:static; border-right:0; border-bottom:1px solid var(--g30); }
-    .content, .topbar { padding-left:20px; padding-right:20px; }
-    #notes { left:0; }
+    nav { width:auto; flex:none; height:auto; position:sticky; top:0; z-index:4; border-right:0; border-bottom:1px solid var(--g30); padding:0; }
+    .nav-head { display:none; }
+    #navlist { display:flex; align-items:center; gap:4px; overflow-x:auto; padding:8px 12px; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+    #navlist::-webkit-scrollbar { display:none; }
+    .nav-group { padding:0 6px 0 10px; white-space:nowrap; }
+    .nav-group span { display:none; }
+    .nav-item { width:auto; white-space:nowrap; padding:6px 10px; font-size:13px; }
+    .nav-item .n { display:none; }
+    .topbar { height:auto; min-height:48px; padding:8px 20px; font-size:13px; gap:12px; }
+    .topbar span:first-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .topbar .meta { flex:none; font-size:12px; }
+    .content { padding:24px 20px 96px; }
+    h1 { font-size:26px; }
+    #notes { left:0; padding:12px 20px 16px; }
+    #arrows { bottom:14px; }
+    .cover { padding:20px 20px 24px; }
+    .cover .logo { height:32px; min-height:0; }
+    .cover .credits { font-size:13px; line-height:1.6; gap:14px; }
+    .cover .credits .badge { width:48px; }
+    .agenda-list { font-size:19px; gap:.45em; }
   }
   @media (max-width:520px) { .app-grid { flex-direction:column; } }
 </style>
@@ -228,6 +245,8 @@
   <symbol id="i-book" viewBox="0 0 24 24" fill="none"><path d="M12 21L11.8999 20.8499C11.2053 19.808 10.858 19.287 10.3991 18.9098C9.99286 18.5759 9.52476 18.3254 9.02161 18.1726C8.45325 18 7.82711 18 6.57482 18H5.2C4.07989 18 3.51984 18 3.09202 17.782C2.71569 17.5903 2.40973 17.2843 2.21799 16.908C2 16.4802 2 15.9201 2 14.8V6.2C2 5.07989 2 4.51984 2.21799 4.09202C2.40973 3.71569 2.71569 3.40973 3.09202 3.21799C3.51984 3 4.07989 3 5.2 3H5.6C7.84021 3 8.96031 3 9.81596 3.43597C10.5686 3.81947 11.1805 4.43139 11.564 5.18404C12 6.03968 12 7.15979 12 9.4M12 21V9.4M12 21L12.1001 20.8499C12.7947 19.808 13.142 19.287 13.6009 18.9098C14.0071 18.5759 14.4752 18.3254 14.9784 18.1726C15.5467 18 16.1729 18 17.4252 18H18.8C19.9201 18 20.4802 18 20.908 17.782C21.2843 17.5903 21.5903 17.2843 21.782 16.908C22 16.4802 22 15.9201 22 14.8V6.2C22 5.07989 22 4.51984 21.782 4.09202C21.5903 3.71569 21.2843 3.40973 20.908 3.21799C20.4802 3 19.9201 3 18.8 3H18.4C16.1598 3 15.0397 3 14.184 3.43597C13.4314 3.81947 12.8195 4.43139 12.436 5.18404C12 6.03968 12 7.15979 12 9.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow-right-circle" viewBox="0 0 24 24" fill="none"><path d="M12 16L16 12M16 12L12 8M16 12H8M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow-left-circle" viewBox="0 0 24 24" fill="none"><path d="M12 8L8 12M8 12L12 16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-funnel" viewBox="0 0 24 24" fill="none"><path d="M2 4.6C2 4.03995 2 3.75992 2.10899 3.54601C2.20487 3.35785 2.35785 3.20487 2.54601 3.10899C2.75992 3 3.03995 3 3.6 3H20.4C20.9601 3 21.2401 3 21.454 3.10899C21.6422 3.20487 21.7951 3.35785 21.891 3.54601C22 3.75992 22 4.03995 22 4.6V5.26939C22 5.53819 22 5.67259 21.9672 5.79756C21.938 5.90831 21.8901 6.01323 21.8255 6.10776C21.7526 6.21443 21.651 6.30245 21.4479 6.4785L15.0521 12.0215C14.849 12.1975 14.7474 12.2856 14.6745 12.3922C14.6099 12.4868 14.562 12.5917 14.5328 12.7024C14.5 12.8274 14.5 12.9618 14.5 13.2306V18.4584C14.5 18.6539 14.5 18.7517 14.4685 18.8363C14.4406 18.911 14.3953 18.9779 14.3363 19.0315C14.2695 19.0922 14.1787 19.1285 13.9971 19.2012L10.5971 20.5612C10.2296 20.7082 10.0458 20.7817 9.89827 20.751C9.76927 20.7242 9.65605 20.6476 9.58325 20.5377C9.5 20.4122 9.5 20.2142 9.5 19.8184V13.2306C9.5 12.9618 9.5 12.8274 9.46715 12.7024C9.43805 12.5917 9.39014 12.4868 9.32551 12.3922C9.25258 12.2856 9.15102 12.1975 8.94789 12.0215L2.55211 6.4785C2.34898 6.30245 2.24742 6.21443 2.17449 6.10776C2.10986 6.01323 2.06195 5.90831 2.03285 5.79756C2 5.67259 2 5.53819 2 5.26939V4.6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-thumbs-up" viewBox="0 0 24 24" fill="none"><path d="M7 22V11M2 13V20C2 21.1046 2.89543 22 4 22H17.4262C18.907 22 20.1662 20.9197 20.3914 19.4562L21.4683 12.4562C21.7479 10.6389 20.3418 9 18.5032 9H15C14.4477 9 14 8.55228 14 8V4.46584C14 3.10399 12.896 2 11.5342 2C11.2093 2 10.915 2.1913 10.7831 2.48812L7.26394 10.4061C7.10344 10.7673 6.74532 11 6.35013 11H4C2.89543 11 2 11.8954 2 13Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
 <div class="shell">
   <nav aria-label="Sections">
@@ -260,12 +279,12 @@
   <div class="title-block agenda">
     <p class="eyebrow-lime">Agenda</p>
     <ol class="agenda-list">
-      <li class="frag"><span class="lime">Onboarding</span> Flow .. traditional, then agentic</li>
-      <li class="frag"><span class="lime">Find</span> .. how does an agent find you?</li>
-      <li class="frag"><span class="lime">Pick</span> .. why would it choose you?</li>
-      <li class="frag"><span class="lime">Sign up</span> .. can it get in without a human?</li>
-      <li class="frag"><span class="lime">Activate</span> .. what is an aha for an agent?</li>
-      <li class="frag"><span class="lime">Measure</span> .. what do you count?</li>
+      <li><span class="lime">Onboarding</span> Flow .. traditional, then agentic</li>
+      <li><span class="lime">Find</span> .. how does an agent find you?</li>
+      <li><span class="lime">Pick</span> .. why would it choose you?</li>
+      <li><span class="lime">Sign up</span> .. can it get in without a human?</li>
+      <li><span class="lime">Activate</span> .. what is an aha for an agent?</li>
+      <li><span class="lime">Measure</span> .. what do you count?</li>
     </ol>
   </div>
   <div class="credits"><div>Tommy Keeley<br>Head of Growth at Amplitude<br>Sept 15, 2026</div><div class="badge"><img src="assets/amplitude.png" alt="Amplitude"></div></div>
@@ -481,7 +500,7 @@
   let i = 0;
 
   // ---------- nav ----------
-  const GROUP_ICONS = { 'Introduction': 'i-book' };   // group label → sprite id; add as icons arrive
+  const GROUP_ICONS = { 'Introduction': 'i-book', 'The funnel': 'i-funnel', 'Close': 'i-thumbs-up' };   // group label → sprite id
   function icon(id) { const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('class', 'icon'); const u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#' + id); svg.appendChild(u); return svg; }
   if (navlist) {
     let group = null;
@@ -628,6 +647,16 @@
     hideT = setTimeout(() => { if (!arrows.matches(':hover')) arrows.classList.remove('show'); }, 2200);
   }
   addEventListener('mousemove', showArrows, { passive: true });
+  addEventListener('touchstart', showArrows, { passive: true });
+  // swipe left / right between sections (ignores swipes inside scrollable tables and the terminal)
+  let tx = null, ty = null;
+  addEventListener('touchstart', e => { const t = e.touches[0]; tx = t.clientX; ty = t.clientY; }, { passive: true });
+  addEventListener('touchend', e => {
+    if (tx === null) return;
+    const t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty; tx = ty = null;
+    if (e.target.closest('.table-scroll, .mock-body, #navlist, button, a')) return;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) { dx < 0 ? next() : prev(); }
+  }, { passive: true });
   if (arrows) arrows.addEventListener('mouseleave', showArrows);
   if (aPrev) aPrev.addEventListener('click', e => { e.stopPropagation(); prev(); aPrev.blur(); });
   if (aNext) aNext.addEventListener('click', e => { e.stopPropagation(); next(); aNext.blur(); });
