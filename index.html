@@ -162,8 +162,8 @@
   .cover .sub { font-size:clamp(18px, 2vw, 40px); font-weight:500; margin:0; color:var(--cover-fg); }
   .cover .lime { color:var(--lime); }
   .cover .credits { display:flex; align-items:center; justify-content:flex-end; gap:2.5vw; text-align:right; font-size:clamp(14px, 1.45vw, 28px); line-height:1.9; font-weight:500; }
-  .cover .credits .badge { width:clamp(56px, 7vw, 140px); height:clamp(56px, 7vw, 140px); border-radius:999px; background:var(--white); display:grid; place-items:center; overflow:hidden; }
-  .cover .credits .badge img, .cover .credits .badge svg { width:66%; height:66%; display:block; }
+  .cover .credits .badge { width:clamp(56px, 7vw, 140px); }
+  .cover .credits .badge img { width:100%; height:auto; display:block; }
 
   /* fragments */
   .frag { opacity:0; transform:translateY(8px); transition:opacity var(--ease), transform var(--ease); }
@@ -217,10 +217,7 @@
   </div>
   <div class="credits">
     <div>Tommy Keeley<br>Head of Growth at Amplitude<br>Sept 15, 2026</div>
-    <div class="badge" aria-label="Amplitude">
-      <!-- Drop the real mark at assets/amplitude.svg and swap this stand-in for <img src="assets/amplitude.svg" alt="Amplitude"> -->
-      <svg viewBox="0 0 100 100" role="img" aria-hidden="true"><path d="M20 62 L48 12 L76 62" fill="none" stroke="var(--black)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 64 Q 40 64 50 64 Q 60 64 66 80 Q 70 88 76 64 Q 82 64 94 64" fill="none" stroke="var(--black)" stroke-width="7" stroke-linecap="round"/></svg>
-    </div>
+    <div class="badge"><img src="assets/amplitude.png" alt="Amplitude"></div>
   </div>
 </section>
 
