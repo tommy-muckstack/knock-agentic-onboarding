@@ -103,9 +103,18 @@
   #wipe { position:fixed; top:0; bottom:0; left:0; width:3px; z-index:15; background:var(--lime); box-shadow:0 0 18px 2px var(--lime); pointer-events:none; opacity:0; will-change:transform; }
   #wipe.in-fwd, #wipe.out-fwd   { animation:sweepFwd  .56s cubic-bezier(.6,0,.2,1) both; }
   #wipe.in-back, #wipe.out-back { animation:sweepBack .56s cubic-bezier(.6,0,.2,1) both; }
-  @keyframes sweepFwd  { 0% { transform:translateX(-10px); opacity:0; } 12% { opacity:.9; } 88% { opacity:.9; } 100% { transform:translateX(100vw); opacity:0; } }
-  @keyframes sweepBack { 0% { transform:translateX(100vw); opacity:0; } 12% { opacity:.9; } 88% { opacity:.9; } 100% { transform:translateX(-10px); opacity:0; } }
-  .panel.fading { opacity:0; transition:opacity .18s ease; }
+  @keyframes sweepFwd  { 0% { transform:translateX(-3px); opacity:.95; } 92% { opacity:.95; } 100% { transform:translateX(100vw); opacity:0; } }
+  @keyframes sweepBack { 0% { transform:translateX(100vw); opacity:.95; } 92% { opacity:.95; } 100% { transform:translateX(-3px); opacity:0; } }
+  /* sliding door: a clone of the outgoing slide sits on top and is clipped away as the line travels */
+  #ghost { position:fixed; inset:0; z-index:14; background:var(--white); overflow:hidden; pointer-events:none; }
+  #ghost.cover-mode { background:var(--cover-bg); }
+  #ghost.cover-mode .content { max-width:none; padding:0; }
+  #ghost .panel { animation:none !important; }
+  #ghost.door-fwd  { animation:doorFwd  .56s cubic-bezier(.6,0,.2,1) both; }
+  #ghost.door-back { animation:doorBack .56s cubic-bezier(.6,0,.2,1) both; }
+  @keyframes doorFwd  { from { clip-path:inset(0% 0% 0% 0%); } to { clip-path:inset(0% 0% 0% 100%); } }
+  @keyframes doorBack { from { clip-path:inset(0% 0% 0% 0%); } to { clip-path:inset(0% 100% 0% 0%); } }
+  .panel.active.none { animation:none; }
   /* the new slide's blocks rise in with a stagger as the wipe clears */
   .panel.active.stagger > *:not(.frag) { animation:rise .38s cubic-bezier(.2,.7,.2,1) both; }
   .panel.active.stagger > *:nth-child(1) { animation-delay:.03s; }
@@ -126,6 +135,7 @@
   h3.sub-h { font-size:15.5px; font-weight:var(--fw-strong); margin:0 0 8px; }
   h4 { font-size:16px; font-weight:var(--fw-strong); color:var(--blue); margin:0 0 8px; }
   .panel-head p, p.intro { max-width:680px; margin:0; }
+  .panel-head p.wide { max-width:none; }
   .panel-head p + p { margin-top:8px; }
   .panel-head p b { color:var(--violet); }
   p.tnote { font-size:13.5px; color:var(--text-secondary); margin:8px 0 0; }
@@ -258,7 +268,7 @@
 
   @media (prefers-reduced-motion:reduce) {
     .panel, .panel.active.stagger > * { animation:none !important; }
-    #wipe { display:none; }
+    #wipe, #ghost { display:none; }
     .frag, .app-card, .step, .nav-item, .btn, .btn-sm, #arrows, .arrow, .agenda-list .desc, nav, #nav-tab { transition:none; }
     .cursor::after { animation:none; }
   }
@@ -352,7 +362,7 @@
   <div class="panel-head">
     <p class="eyebrow">Onboarding 101</p>
     <h1>The growth funnel, end to end, for a human</h1>
-    <p>Four stages. Every one of them built to move a person: <b>confidence, comprehension, motivation, permission.</b></p>
+    <p class="wide">Historically, you move a human through this funnel with human reasons: <b>confidence, comprehension, motivation, permission.</b></p>
   </div>
   <div class="gf">
     <div class="gf-stage frag">
@@ -388,10 +398,6 @@
       <p>Where the value exchange becomes money.</p>
       <div class="gf-sub"><div class="gf-label">Gate → Meter → Bill</div><p class="tnote">Where the paywall sits, what you count, and when you charge. Map it onto setup, aha, habit.</p></div>
     </div>
-  </div>
-  <div class="callout frag">
-    <div class="label">Hold onto this</div>
-    Every stage assumes a person on the other side who can be persuaded, reassured, and nudged. The next slide takes the person out.
   </div>
 </section>
 
@@ -631,7 +637,7 @@
   let wiping = false;
   function applySlide(n, fromEnd, fromHistory, mode) {
     const s = slides[n];
-    slides.forEach(x => x.classList.remove('active', 'stagger', 'plain', 'fading'));
+    slides.forEach(x => x.classList.remove('active', 'stagger', 'plain', 'fading', 'none'));
     void s.offsetWidth;
     s.classList.add('active', mode); i = n;
     frags(s).forEach(f => {
@@ -657,13 +663,21 @@
     wiping = true;
     const dir = n > i ? 'fwd' : 'back';
     const from = slides[i];
+    // ghost = a static copy of the outgoing slide, laid out exactly as it was
+    const ghost = document.createElement('div'); ghost.id = 'ghost';
+    const wasCover = from.classList.contains('cover');
+    ghost.classList.toggle('cover-mode', wasCover);
+    if (!wasCover && topbar) ghost.appendChild(topbar.cloneNode(true));
+    const gc = document.createElement('div'); gc.className = 'content'; if (content) gc.style.zoom = content.style.zoom;
+    const clone = from.cloneNode(true); clone.classList.remove('stagger', 'plain', 'fading'); clone.classList.add('active'); clone.removeAttribute('id');
+    clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+    gc.appendChild(clone); ghost.appendChild(gc);
+    document.body.appendChild(ghost);
+    // the new slide is painted underneath, fully laid out, before the door starts moving
+    applySlide(n, fromEnd, fromHistory, 'none');
+    ghost.classList.add('door-' + dir);
     wipe.className = 'in-' + dir;
-    from.classList.add('fading');
-    setTimeout(() => {
-      from.classList.remove('fading');
-      applySlide(n, fromEnd, fromHistory, 'stagger');
-    }, 180);
-    wipe.addEventListener('animationend', function onDone() { wipe.className = ''; wiping = false; }, { once: true });
+    wipe.addEventListener('animationend', function onDone() { ghost.remove(); wipe.className = ''; wiping = false; }, { once: true });
   }
   function next() {
     const f = frags(slides[i]).find(f => !f.classList.contains('on'));
