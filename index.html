@@ -90,7 +90,8 @@
   main { flex:1; min-width:0; }
   .topbar { height:56px; border-bottom:1px solid var(--g30); padding:0 40px 0 64px; display:flex; align-items:center; justify-content:space-between; font-size:15.5px; }
   .topbar .meta { color:var(--text-secondary); font-size:14px; font-variant-numeric:tabular-nums; }
-  .content { max-width:1040px; margin:0 auto; padding:40px 40px 100px; }
+  .content { max-width:1200px; margin:0 auto; padding:32px 40px 72px; }
+  @media (min-width:821px) { html, body { height:100%; overflow:hidden; } }
 
   /* ============ Panels ============ */
   .content { position:relative; }
@@ -146,7 +147,7 @@
   .app-card ul.notes { padding-left:20px; }
   .app-card .path { font-size:13.5px; color:var(--text-secondary); margin-top:10px; }
 
-  .gf { display:grid; grid-template-columns:1.1fr 1.5fr 1fr 1fr; gap:12px; margin:16px 0 0; align-items:stretch; }
+  .gf { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:12px; margin:16px 0 0; align-items:stretch; }
   .gf-stage { position:relative; background:var(--white); border:1px solid var(--g30); border-radius:12px; padding:16px; display:flex; flex-direction:column; gap:6px; }
   .gf-stage .k { width:26px; height:26px; border-radius:999px; border:2px solid var(--blue); color:var(--blue); font-size:12.5px; font-weight:var(--fw-strong); display:inline-flex; align-items:center; justify-content:center; margin-bottom:4px; }
   .gf-stage h4 { margin:0; }
@@ -317,7 +318,7 @@
       <span>Knock · Marketing Engineer Meetup · Sept 15, 2026</span>
       <span class="meta" id="counter"></span>
     </div>
-    <div class="content">
+    <div class="content" id="content">
 
 <!-- 1 · TITLE (cover) -->
 <section class="panel cover" data-nav="Title" data-group="Introduction" data-notes="Two weeks ago I told an agent I needed an oil change. It found my mechanic from old receipts, picked them, booked the slot, and put the invite on my calendar and my wife's. Nobody at that shop did anything to earn that booking. That is an acquisition funnel with no human in it. Tonight, put your product on the other side of that funnel.">
@@ -646,6 +647,7 @@
     if (!fromHistory) { if (history.state === null) history.replaceState({ n }, '', '#' + (n + 1)); else if (history.state.n !== n) history.pushState({ n }, '', '#' + (n + 1)); }
     if (typeof syncArrows === 'function') syncArrows();
     window.scrollTo({ top: 0 });
+    requestAnimationFrame(fitSlide);
   }
   function show(n, { fromEnd = false, fromHistory = false } = {}) {
     n = Math.max(0, Math.min(slides.length - 1, n));
@@ -665,7 +667,7 @@
   }
   function next() {
     const f = frags(slides[i]).find(f => !f.classList.contains('on'));
-    if (f) { f.classList.add('on'); fire(f.dataset.on); syncArrows(); return; }
+    if (f) { f.classList.add('on'); fire(f.dataset.on); syncArrows(); requestAnimationFrame(fitSlide); return; }
     if (i < slides.length - 1) show(i + 1);
   }
   function prev() {
@@ -720,7 +722,7 @@
 
   // ---------- projector zoom (the 16px scale is for a laptop; Z cycles it for a room) ----------
   const zooms = [1, 1.25, 1.5, 1.75]; let z = 0;
-  function applyZoom() { document.body.style.zoom = zooms[z]; }
+  function applyZoom() { document.body.style.zoom = zooms[z]; requestAnimationFrame(fitSlide); }
   try { const saved = parseFloat(localStorage.getItem('zoom')); const k = zooms.indexOf(saved); if (k >= 0) z = k; } catch (e) {}
   applyZoom();
 
@@ -743,6 +745,20 @@
     }
   });
   if (help) help.addEventListener('click', () => help.hidden = true);
+  // fit the active slide to the viewport (desktop): scale down only when it would overflow
+  const content = $('content'), topbar = document.querySelector('.topbar');
+  function fitSlide() {
+    if (!content) return;
+    const s = slides[i];
+    content.style.zoom = '';
+    if (!s || s.classList.contains('cover') || innerWidth <= 820) return;
+    const bodyZoom = parseFloat(document.body.style.zoom) || 1;
+    const avail = innerHeight / bodyZoom - (topbar ? topbar.offsetHeight : 0);
+    const need = content.scrollHeight;
+    if (need > avail) content.style.zoom = Math.max(.55, avail / need);
+  }
+  addEventListener('resize', fitSlide);
+
   // nav drawer: hover the top-left corner (or the menu tab) to fly out, leave to collapse
   const nav = document.querySelector('nav'), navHot = $('nav-hot'), navTab = $('nav-tab');
   let navT = null;
