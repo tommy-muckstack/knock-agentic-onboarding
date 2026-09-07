@@ -66,6 +66,7 @@
   .nav-head { height:56px; display:flex; align-items:center; padding:0 12px; font-size:15.5px; font-weight:var(--fw-strong); border-bottom:1px solid var(--g30); margin-bottom:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .nav-group { display:flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--text-secondary); padding:14px 12px 4px; }
   .nav-group .icon { font-size:16px; }
+  .nav-sub { font-size:12px; font-weight:var(--fw-strong); color:var(--g60); padding:8px 12px 2px; }
   .nav-item {
     display:flex; align-items:center; gap:10px; width:100%; text-align:left;
     padding:7px 12px; border:1px solid transparent; border-radius:var(--btn-radius); background:transparent;
@@ -225,6 +226,7 @@
     #navlist::-webkit-scrollbar { display:none; }
     .nav-group { padding:0 6px 0 10px; white-space:nowrap; }
     .nav-group span { display:none; }
+    .nav-sub { display:none; }
     .nav-item { width:auto; white-space:nowrap; padding:6px 10px; font-size:13px; }
     .nav-item .n { display:none; }
     .topbar { height:auto; min-height:48px; padding:8px 20px; font-size:13px; gap:12px; }
@@ -317,7 +319,7 @@
 </section>
 
 <!-- 4 · FIND -->
-<section class="panel" data-nav="Find" data-group="The funnel" data-notes="Discovery moved. Search is being joined by answer engines and agents reading your docs, your package README, your skills, marketplaces, public repos, community answers, third-party citations. Those decide whether an agent recommends you or can even use you. We have humans on keyboards seeding Reddit every week, not for people, for the training data. If your marketing site is beautiful and your docs are a maze, you are invisible to the reader that matters now.">
+<section class="panel" data-nav="Find" data-group="The funnel" data-sub="Acquisition" data-notes="Discovery moved. Search is being joined by answer engines and agents reading your docs, your package README, your skills, marketplaces, public repos, community answers, third-party citations. Those decide whether an agent recommends you or can even use you. We have humans on keyboards seeding Reddit every week, not for people, for the training data. If your marketing site is beautiful and your docs are a maze, you are invisible to the reader that matters now.">
   <div class="panel-head">
     <p class="eyebrow">Step 1 of 5 · Find</p>
     <h1>Your docs are your homepage now</h1>
@@ -381,7 +383,7 @@
 </section>
 
 <!-- 7 · ACTIVATE -->
-<section class="panel" data-nav="Activate" data-group="The funnel" data-notes="Humans need trust and a moment. Agents need a path with no dead ends. If the first task fails it moves to the next product and never tells you. So the bar isn't fewer clicks. It's less human work. And validation is the piece everyone skips: an agent that instruments forty events and silently gets twelve wrong has created a mess you find in a QBR three months later. The skill has to check its own work and report what it couldn't verify. Installed is not the finish line.">
+<section class="panel" data-nav="Activate" data-group="The funnel" data-sub="Activation" data-notes="Humans need trust and a moment. Agents need a path with no dead ends. If the first task fails it moves to the next product and never tells you. So the bar isn't fewer clicks. It's less human work. And validation is the piece everyone skips: an agent that instruments forty events and silently gets twelve wrong has created a mess you find in a QBR three months later. The skill has to check its own work and report what it couldn't verify. Installed is not the finish line.">
   <div class="panel-head">
     <p class="eyebrow">Step 4 of 5 · Activate</p>
     <h1>Agents don't get an aha. They finish or they leave.</h1>
@@ -425,7 +427,7 @@
 </section>
 
 <!-- 9 · MEASURE -->
-<section class="panel" data-nav="Measure" data-group="The funnel" data-notes="One caution, in my own words: setup completion is not activation, and a first signal is not value. Compare retention of setup completers to non-completers before you claim anything. The two I'd start with are the ones with no old-world counterpart: hands-off completion rate and conversion by instruction version. When an agent reads your docs to install you, your instruction file is the onboarding flow, and you can version it and test it like one.">
+<section class="panel" data-nav="Measure" data-group="Measurement" data-notes="One caution, in my own words: setup completion is not activation, and a first signal is not value. Compare retention of setup completers to non-completers before you claim anything. The two I'd start with are the ones with no old-world counterpart: hands-off completion rate and conversion by instruction version. When an agent reads your docs to install you, your instruction file is the onboarding flow, and you can version it and test it like one.">
   <div class="panel-head">
     <p class="eyebrow">Step 5 of 5 · Measure</p>
     <h1>Same funnel, new numbers</h1>
@@ -451,7 +453,7 @@
 </section>
 
 <!-- 10 · HOMEWORK -->
-<section class="panel" data-nav="Homework" data-group="Close" data-notes="That's the whole ask. Takes an hour. You'll learn more about your funnel than a quarter of dashboards.">
+<section class="panel" data-nav="Homework" data-group="Measurement" data-notes="That's the whole ask. Takes an hour. You'll learn more about your funnel than a quarter of dashboards.">
   <div class="panel-head">
     <p class="eyebrow">This week</p>
     <h1>Point an agent at your own docs</h1>
@@ -464,7 +466,7 @@
 </section>
 
 <!-- 11 · THANK YOU -->
-<section class="panel" data-nav="Thank you" data-group="Close" data-notes="">
+<section class="panel" data-nav="Thank you" data-group="Measurement" data-notes="">
   <div class="panel-head">
     <p class="eyebrow">Thank you</p>
     <h1>Find me at the bar</h1>
@@ -503,7 +505,7 @@
   let i = 0, agendaT = null;
 
   // ---------- nav ----------
-  const GROUP_ICONS = { 'Introduction': 'i-book', 'The funnel': 'i-funnel', 'Close': 'i-thumbs-up' };   // group label → sprite id
+  const GROUP_ICONS = { 'Introduction': 'i-book', 'The funnel': 'i-funnel', 'Measurement': 'i-thumbs-up' };   // group label → sprite id
   function icon(id) { const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); svg.setAttribute('class', 'icon'); const u = document.createElementNS('http://www.w3.org/2000/svg', 'use'); u.setAttribute('href', '#' + id); svg.appendChild(u); return svg; }
   if (navlist) {
     let group = null;
@@ -515,6 +517,7 @@
         const t = document.createElement('span'); t.textContent = group; g.appendChild(t);
         navlist.appendChild(g);
       }
+      if (s.dataset.sub) { const sub = document.createElement('div'); sub.className = 'nav-sub'; sub.textContent = s.dataset.sub; navlist.appendChild(sub); }
       const b = document.createElement('button'); b.type = 'button'; b.className = 'nav-item';
       const num = document.createElement('span'); num.className = 'n'; num.textContent = String(n + 1).padStart(2, '0');
       const lbl = document.createElement('span'); lbl.textContent = s.dataset.nav;
