@@ -137,6 +137,10 @@
   h4 { font-size:16px; font-weight:var(--fw-strong); color:var(--blue); margin:0 0 8px; }
   .panel-head p, p.intro { max-width:680px; margin:0; }
   .panel-head p.wide { max-width:none; }
+  h1.steps-h { max-width:none; display:flex; flex-wrap:wrap; align-items:baseline; gap:0 .35em; }
+  h1.steps-h .dim { color:var(--g50); font-weight:var(--fw-body); }
+  h1.steps-h .sep { color:var(--g50); font-weight:var(--fw-body); }
+  h1.steps-h .cur { color:var(--text-primary); }
   .panel-head.has-toggle { position:relative; padding-right:220px; }
   .mode-toggle { position:absolute; right:0; top:0; display:inline-flex; border:1px solid var(--g40); border-radius:var(--btn-radius); overflow:hidden; }
   .mode-toggle .btn { border:0; border-radius:0; height:34px; padding:0 18px; font-size:14px; }
@@ -456,8 +460,8 @@
 <section class="panel" id="find" data-nav="Find" data-group="The funnel" data-sub="Acquisition" data-notes="Discovery moved. Search is being joined by answer engines and agents reading your docs, your package README, your skills, marketplaces, public repos, community answers, third-party citations. Those decide whether an agent recommends you or can even use you. We have humans on keyboards seeding Reddit every week, not for people, for the training data. If your marketing site is beautiful and your docs are a maze, you are invisible to the reader that matters now.">
   <div class="panel-head">
     <p class="eyebrow">Acquisition · Find</p>
-    <h1>Your docs are your homepage now</h1>
-    <p>The question used to be "can a person find our website?" Now it's <b>"can an agent find the official path, understand it, and execute it correctly?"</b></p>
+    <h1 class="steps-h"><span class="cur">Find</span> <span class="sep">›</span> <span class="dim">Pick</span> <span class="sep">›</span> <span class="dim">Sign up</span></h1>
+    <p><b>Your docs are your homepage now.</b> The question used to be "can a person find our website?" Now it's "can an agent find the official path, understand it, and execute it correctly?"</p>
   </div>
   <div class="two-up">
     <div class="mock dark" aria-label="An agent choosing a product, simulated" role="region">
@@ -502,8 +506,8 @@
 <section class="panel" data-nav="Pick" data-group="The funnel" data-notes="A legacy story in the training data is enterprise, heavy, long implementation. So when an agent compares tools it reaches for the lighter one. That's not a positioning problem you fix with a homepage refresh. It's a corpus problem. The novel part for a marketing room: your share of voice metric now has a twin, agent pick rate, and the levers are docs, READMEs, community answers and build-in-public posts, not ad spend. Nobody has published theirs yet. Be first.">
   <div class="panel-head">
     <p class="eyebrow">Acquisition · Pick</p>
-    <h1>Agents choose from what they've already read</h1>
-    <p>An agent picks from training data that is six to eighteen months old. <b>Whatever the internet said about you last year is what gets you picked this year.</b></p>
+    <h1 class="steps-h"><span class="dim">Find</span> <span class="sep">›</span> <span class="cur">Pick</span> <span class="sep">›</span> <span class="dim">Sign up</span></h1>
+    <p><b>Agents choose from what they've already read.</b> An agent picks from training data that is six to eighteen months old. Whatever the internet said about you last year is what gets you picked this year.</p>
   </div>
   <ul class="notes">
     <li class="">A homepage refresh does not fix this. It is a corpus problem, not a positioning problem.</li>
@@ -519,8 +523,8 @@
 <section class="panel" id="signup" data-nav="Sign up" data-group="The funnel" data-notes="Most setup experiences are a menu of competing routes when the customer wants one recommendation. A human can triangulate. An agent has to guess, and every judgment call you left implicit is a place it guesses wrong. So: one primary door, agent instruction. A side door, repo connection. A quiet fallback, the manual snippet. Different doors, same setup logic, same verification. And use deterministic tools for the parts where guessing is dangerous: authentication, credentials, project selection, package install. Let the agent reason about the business, not about your OAuth flow.">
   <div class="panel-head">
     <p class="eyebrow">Acquisition · Sign up</p>
-    <h1>One path, not a menu</h1>
-    <p>Most setup is a menu of competing routes when the customer wants one recommendation. A human triangulates. <b>An agent guesses, and every implicit judgment call is a place it guesses wrong.</b></p>
+    <h1 class="steps-h"><span class="dim">Find</span> <span class="sep">›</span> <span class="dim">Pick</span> <span class="sep">›</span> <span class="cur">Sign up</span></h1>
+    <p><b>One path, not a menu.</b> Most setup is a menu of competing routes when the customer wants one recommendation. A human triangulates. An agent guesses, and every implicit judgment call is a place it guesses wrong.</p>
   </div>
   <div class="table-scroll">
     <table class="dtable" id="doors">
@@ -545,8 +549,8 @@
 <section class="panel" data-nav="Setup" data-group="The funnel" data-sub="Activation" data-notes="Setup means the system works. For a human that is a wizard and a checklist. For an agent it is one instruction it can follow and deterministic tools for the parts where guessing is dangerous: authentication, credentials, project selection, package install. The bar is not fewer clicks. It is less human work. If the first task fails, the agent moves to the next product and never tells you.">
   <div class="panel-head">
     <p class="eyebrow">Activation · Setup</p>
-    <h1>Setup means the system works</h1>
-    <p>A human gets a wizard and a checklist. <b>An agent gets one instruction and tools it cannot guess wrong with.</b></p>
+    <h1 class="steps-h"><span class="cur">Setup</span> <span class="sep">›</span> <span class="dim">Aha</span> <span class="sep">›</span> <span class="dim">Habit</span></h1>
+    <p><b>Setup means the system works.</b> A human gets a wizard and a checklist. An agent gets one instruction and tools it cannot guess wrong with.</p>
   </div>
   <div class="table-scroll">
     <table class="dtable">
@@ -566,8 +570,8 @@
 <section class="panel" data-nav="Aha" data-group="The funnel" data-sub="Activation" data-notes="Humans need trust and a moment. Agents need a path with no dead ends. There is no aha for an agent. It finishes or it leaves. So the middle of the chain is verification: send a synthetic signal, get a validation ID back, confirm receipt. An agent that instruments forty events and silently gets twelve wrong has created a mess you find in a review three months later. The skill has to check its own work and report what it could not verify. Installed is not the finish line. First value is a dashboard with real data and the next action named.">
   <div class="panel-head">
     <p class="eyebrow">Activation · Aha</p>
-    <h1>Agents don't get an aha. They finish or they leave.</h1>
-    <p>The human aha is a feeling. <b>The agent version is a verified outcome with the next action named.</b></p>
+    <h1 class="steps-h"><span class="dim">Setup</span> <span class="sep">›</span> <span class="cur">Aha</span> <span class="sep">›</span> <span class="dim">Habit</span></h1>
+    <p><b>Agents don't get an aha. They finish or they leave.</b> The human aha is a feeling. The agent version is a verified outcome with the next action named.</p>
   </div>
   <div class="app-grid">
     <div class="app-card"><h4>Verify</h4><p>Send a synthetic signal. Get a validation ID back. Confirm receipt. The skill checks its own work and reports what it could not verify.</p></div>
@@ -580,8 +584,8 @@
 <section class="panel" data-nav="Habit" data-group="The funnel" data-sub="Activation" data-notes="Habit for a human is coming back on a cadence because the product is part of their week. An agent does not have a week. It comes back when something calls it: a schedule, a webhook, a new task from a human. So habit for an agent is a trigger you designed, not a feeling you earned. The measure is how many tasks it finishes without a human in the loop, and how often that happens.">
   <div class="panel-head">
     <p class="eyebrow">Activation · Habit</p>
-    <h1>Habit is a trigger, not a feeling</h1>
-    <p>A human comes back because the product is part of their week. <b>An agent comes back because something called it.</b></p>
+    <h1 class="steps-h"><span class="dim">Setup</span> <span class="sep">›</span> <span class="dim">Aha</span> <span class="sep">›</span> <span class="cur">Habit</span></h1>
+    <p><b>Habit is a trigger, not a feeling.</b> A human comes back because the product is part of their week. An agent comes back because something called it.</p>
   </div>
   <div class="app-grid">
     <div class="app-card"><h4>Schedule</h4><p>A recurring job: the weekly report, the nightly sync, the Monday audit.</p></div>
