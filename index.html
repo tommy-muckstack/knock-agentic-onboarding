@@ -207,7 +207,8 @@
   #help .row { display:flex; align-items:center; margin:6px 0; font-size:14px; }
 
   @media (prefers-reduced-motion:reduce) {
-    .panel.active { animation:none; }
+    .panel { animation:none !important; }
+    .panel.leaving { display:none !important; }
     .frag, .app-card, .step, .nav-item, .btn, .btn-sm, #arrows, .arrow { transition:none; }
     .cursor::after { animation:none; }
   }
@@ -544,8 +545,17 @@
 
   function show(n, { fromEnd = false, fromHistory = false } = {}) {
     n = Math.max(0, Math.min(slides.length - 1, n));
-    slides.forEach(s => s.classList.remove('active'));
-    const s = slides[n]; s.classList.add('active'); i = n;
+    const from = slides[i], dir = n > i ? 'fwd' : 'back';
+    slides.forEach(x => { if (x !== from) x.classList.remove('active', 'leaving', 'enter-fwd', 'enter-back', 'leave-fwd', 'leave-back'); });
+    const s = slides[n];
+    if (from && from !== s && from.classList.contains('active')) {
+      from.classList.remove('active', 'enter-fwd', 'enter-back');
+      from.classList.add('leaving', 'leave-' + dir);
+      from.addEventListener('animationend', () => from.classList.remove('leaving', 'leave-fwd', 'leave-back'), { once: true });
+    }
+    s.classList.remove('enter-fwd', 'enter-back');
+    void s.offsetWidth; // restart the enter animation
+    s.classList.add('active', 'enter-' + dir); i = n;
     frags(s).forEach(f => {
       if (fromEnd) { f.classList.add('on'); fire(f.dataset.on); }
       else { f.classList.remove('on'); fire(f.dataset.off); }
