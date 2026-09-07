@@ -171,8 +171,8 @@
   .gf-sources .gf-label { margin-bottom:2px; }
   .pill { display:inline-flex; align-items:center; justify-content:center; height:30px; padding:0 12px; border-radius:999px; background:var(--chip-bg); border:1px solid var(--chip-border); color:var(--chip-text); font-size:14px; font-weight:var(--fw-strong); white-space:nowrap; }
   .pill.big { height:36px; padding:0 16px; font-size:16px; }
-  .pills { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:4px; }
-  .pills .sep { color:var(--g60); font-size:16px; }
+  .pills { display:flex; flex-direction:column; align-items:flex-start; gap:4px; margin-top:4px; }
+  .pills .sep { color:var(--g60); font-size:16px; line-height:1; padding-left:14px; }
   .gf-stage { position:relative; background:var(--white); border:1px solid var(--g30); border-radius:12px; padding:20px 20px 18px; display:flex; flex-direction:column; gap:10px; min-height:300px; }
   .gf-stage .k { width:30px; height:30px; border-radius:999px; border:2px solid var(--blue); color:var(--blue); font-size:14px; font-weight:var(--fw-strong); display:inline-flex; align-items:center; justify-content:center; }
   .gf-stage h4 { margin:0; font-size:22px; }
@@ -387,7 +387,7 @@
       <span class="pill">SEO</span><span class="pill">SEM</span><span class="pill">Paid social</span><span class="pill">Content</span><span class="pill">Word of mouth</span><span class="pill">Referral</span><span class="pill">Partnerships</span><span class="pill">Community</span><span class="pill">Direct</span>
     </div>
     <div class="gf-stage gf-acq"><div class="k">1</div><h4>Acquisition</h4><p>Where they come from. Some channels bring intent, some bring volume.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Signups</span></div></div>
-    <div class="gf-stage"><div class="k">2</div><h4>Activation</h4><p>Not a moment. A chain, and the chain predicts retention.</p><div class="pills"><span class="pill big">Setup</span><span class="sep">→</span><span class="pill big">Aha</span><span class="sep">→</span><span class="pill big">Habit</span></div><div class="metric"><span class="ml">Metric</span><span class="mv">7-day aha rate</span></div></div>
+    <div class="gf-stage"><div class="k">2</div><h4>Activation</h4><p>Not a moment. A chain, and the chain predicts retention.</p><div class="pills"><span class="pill big">Setup</span><span class="sep">↓</span><span class="pill big">Aha</span><span class="sep">↓</span><span class="pill big">Habit</span></div><div class="metric"><span class="ml">Metric</span><span class="mv">7-day aha rate</span></div></div>
     <div class="gf-stage"><div class="k">3</div><h4>Engagement</h4><p>Breadth and depth of use once the habit exists.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Weekly Active Users</span></div></div>
     <div class="gf-stage"><div class="k">4</div><h4>Monetization</h4><p>Where the value exchange becomes money. Gate, meter, bill.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Trial starts → ARR</span></div></div>
   </div>
@@ -399,7 +399,7 @@
       <span class="pill">Docs</span><span class="pill">README</span><span class="pill">Skills</span><span class="pill">MCP registries</span><span class="pill">Package managers</span><span class="pill">Public repos</span><span class="pill">Community answers</span><span class="pill">Citations</span><span class="pill">Training data</span>
     </div>
     <div class="gf-stage gf-acq"><div class="k">1</div><h4>Acquisition</h4><p>Where it finds you. It doesn't browse, it reads: the official path, or nothing.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Hands-off signups</span></div></div>
-    <div class="gf-stage"><div class="k">2</div><h4>Activation</h4><p>Still a chain. No aha: it finishes or it leaves, so verification is the middle step.</p><div class="pills"><span class="pill big">Setup</span><span class="sep">→</span><span class="pill big">Verify</span><span class="sep">→</span><span class="pill big">First value</span></div><div class="metric"><span class="ml">Metric</span><span class="mv">Verified completion rate</span></div></div>
+    <div class="gf-stage"><div class="k">2</div><h4>Activation</h4><p>Still a chain. No aha: it finishes or it leaves, so verification is the middle step.</p><div class="pills"><span class="pill big">Setup</span><span class="sep">↓</span><span class="pill big">Verify</span><span class="sep">↓</span><span class="pill big">First value</span></div><div class="metric"><span class="ml">Metric</span><span class="mv">Verified completion rate</span></div></div>
     <div class="gf-stage"><div class="k">3</div><h4>Engagement</h4><p>Runs on a trigger or a schedule. Breadth is how many tasks it can finish without a human.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Tasks completed, no human</span></div></div>
     <div class="gf-stage"><div class="k">4</div><h4>Monetization</h4><p>Gate, meter, bill still apply. The meter moves from seats to actions.</p><div class="metric"><span class="ml">Metric</span><span class="mv">Usage revenue per agent</span></div></div>
   </div>
