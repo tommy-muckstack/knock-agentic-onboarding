@@ -9,6 +9,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
 <style>
+  /* Gellix: licensed, local-only. Not shipped with the page; Poppins is the public fallback. SemiBold covers 600-700 since the family has no Bold cut. */
+  @font-face { font-family:'Gellix'; src:local('Gellix Light'), local('Gellix-Light'); font-weight:300; font-style:normal; }
+  @font-face { font-family:'Gellix'; src:local('Gellix'), local('Gellix Regular'), local('Gellix-Regular'); font-weight:400; font-style:normal; }
+  @font-face { font-family:'Gellix'; src:local('Gellix Medium'), local('Gellix-Medium'); font-weight:500; font-style:normal; }
+  @font-face { font-family:'Gellix'; src:local('Gellix SemiBold'), local('Gellix-SemiBold'); font-weight:600 700; font-style:normal; }
+  @font-face { font-family:'Gellix'; src:local('Gellix Regular Italic'), local('Gellix-RegularItalic'); font-weight:400; font-style:italic; }
+  @font-face { font-family:'Gellix'; src:local('Gellix SemiBold Italic'), local('Gellix-SemiBoldItalic'); font-weight:600 700; font-style:italic; }
   /* ============ Tokens (light-only by design; no dark-mode blocks) ============ */
   :root {
     --blue:#0052F2; --blue-dark:#001A4F; --lilac:#6980FF; --violet:#A373FF;
@@ -40,7 +47,7 @@
   body {
     background:var(--white); color:var(--text-primary);
     font-family:var(--font); font-size:var(--fs-body); font-weight:var(--fw-body); line-height:1.7;
-    -webkit-font-smoothing:antialiased;
+    -webkit-font-smoothing:antialiased; font-synthesis:none;
   }
   p, li, td, th, div, span, button, a, h1, h2, h3, h4, footer, summary { font-family:inherit; }
   img { max-width:100%; }
