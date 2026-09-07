@@ -167,6 +167,18 @@
   .cover .credits .badge { width:clamp(56px, 7vw, 140px); }
   .cover .credits .badge img { width:100%; height:auto; display:block; }
 
+  /* ============ Hover arrows (appear on mouse move, fade when idle) ============ */
+  #arrows { position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:8; display:flex; gap:10px; opacity:0; pointer-events:none; transition:opacity var(--ease); }
+  #arrows.show { opacity:1; pointer-events:auto; }
+  .arrow { width:44px; height:44px; border-radius:999px; display:inline-flex; align-items:center; justify-content:center; padding:0; background:var(--white); color:var(--text-primary); border:1px solid var(--g40); cursor:pointer; box-shadow:0 2px 10px var(--shadow); transition:border-color var(--ease), color var(--ease); }
+  .arrow svg { width:24px; height:24px; }
+  .arrow:hover { border-color:var(--blue); color:var(--blue); }
+  .arrow:focus-visible { outline:none; box-shadow:0 0 0 3px var(--focus-ring); }
+  .arrow[disabled] { color:var(--g50); cursor:default; border-color:var(--g30); }
+  body.cover-mode .arrow { background:var(--cover-bg); color:var(--cover-fg); border-color:var(--g80); }
+  body.cover-mode .arrow:hover { border-color:var(--lime); color:var(--lime); }
+  body.cover-mode .arrow[disabled] { color:var(--g70); border-color:var(--g80); }
+
   /* fragments */
   .frag { opacity:0; transform:translateY(8px); transition:opacity var(--ease), transform var(--ease); }
   .frag.on { opacity:1; transform:none; }
@@ -181,7 +193,7 @@
 
   @media (prefers-reduced-motion:reduce) {
     .panel.active { animation:none; }
-    .frag, .app-card, .step, .nav-item, .btn, .btn-sm { transition:none; }
+    .frag, .app-card, .step, .nav-item, .btn, .btn-sm, #arrows, .arrow { transition:none; }
     .cursor::after { animation:none; }
   }
   @media (max-width:900px) { .demo-grid { grid-template-columns:1fr; } }
@@ -421,6 +433,10 @@
   </main>
 </div>
 
+<div id="arrows" aria-label="Section navigation">
+  <button class="arrow" id="arrow-prev" type="button" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 8L8 12M8 12L12 16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <button class="arrow" id="arrow-next" type="button" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16L16 12M16 12L12 8M16 12H8M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+</div>
 <div id="notes" hidden><div class="label">Speaker notes</div><div id="notes-text"></div></div>
 <div id="help" hidden>
   <div class="card">
@@ -490,16 +506,17 @@
     if (counter) counter.textContent = 'Section ' + (n + 1) + ' of ' + slides.length;
     if (notesText) notesText.textContent = s.dataset.notes || 'No notes for this section.';
     history.replaceState(null, '', '#' + (n + 1));
+    if (typeof syncArrows === 'function') syncArrows();
     window.scrollTo({ top: 0 });
   }
   function next() {
     const f = frags(slides[i]).find(f => !f.classList.contains('on'));
-    if (f) { f.classList.add('on'); fire(f.dataset.on); return; }
+    if (f) { f.classList.add('on'); fire(f.dataset.on); syncArrows(); return; }
     if (i < slides.length - 1) show(i + 1);
   }
   function prev() {
     const on = frags(slides[i]).filter(f => f.classList.contains('on'));
-    if (on.length) { const f = on[on.length - 1]; f.classList.remove('on'); fire(f.dataset.off); return; }
+    if (on.length) { const f = on[on.length - 1]; f.classList.remove('on'); fire(f.dataset.off); syncArrows(); return; }
     if (i > 0) show(i - 1, { fromEnd: true });
   }
 
@@ -572,6 +589,19 @@
     }
   });
   if (help) help.addEventListener('click', () => help.hidden = true);
+  // hover arrows
+  const arrows = $('arrows'), aPrev = $('arrow-prev'), aNext = $('arrow-next');
+  let hideT = null;
+  function showArrows() {
+    if (!arrows) return;
+    arrows.classList.add('show'); clearTimeout(hideT);
+    hideT = setTimeout(() => { if (!arrows.matches(':hover')) arrows.classList.remove('show'); }, 2200);
+  }
+  addEventListener('mousemove', showArrows, { passive: true });
+  if (arrows) arrows.addEventListener('mouseleave', showArrows);
+  if (aPrev) aPrev.addEventListener('click', e => { e.stopPropagation(); prev(); aPrev.blur(); });
+  if (aNext) aNext.addEventListener('click', e => { e.stopPropagation(); next(); aNext.blur(); });
+  function syncArrows() { if (aPrev) aPrev.disabled = i === 0; if (aNext) aNext.disabled = i === slides.length - 1 && !frags(slides[i]).some(f => !f.classList.contains('on')); }
   // cover: a click anywhere advances (links and buttons still work)
   document.querySelectorAll('.panel.cover').forEach(c => c.addEventListener('click', e => { if (!e.target.closest('a, button')) next(); }));
 
